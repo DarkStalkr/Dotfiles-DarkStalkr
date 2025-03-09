@@ -1,0 +1,21 @@
+[Default Applications]
+x-scheme-handler/http=firefox.desktop
+x-scheme-handler/https=firefox.desktop
+image/jpeg=org.gnome.eog.desktop
+image/png=org.gnome.eog.desktop
+image/gif=org.gnome.eog.desktop
+image/webp=org.gnome.eog.desktop
+application/pdf=firefox.desktop
+application/x-zerosize=sublime_text.desktop
+x-scheme-handler/jetbrains=jetbrains-toolbox.desktop
+application/x-font-bdf=quartus.desktop
+text/plain=org.gnome.TextEditor.desktop
+x-scheme-handler/gitkraken=GitKraken.desktop
+
+[Added Associations]
+application/pdf=firefox.desktop;
+application/x-zerosize=vlc.desktop;firefox.desktop;sublime_text.desktop;
+text/plain=sublime_text.desktop;org.gnome.TextEditor.desktop;
+application/x-font-bdf=quartus.desktop;
+application/x-shellscript=org.gnome.TextEditor.desktop;
+video/mp4=mpv.desktop;
