@@ -49,4 +49,10 @@
 ;; (unpin! t)
 
 ;; For creating nodes visualizing nodes
-(package! org-roam-ui)
+(package! org-roam-ui)  ; The "Obsidian Graph" for Emacs
+(package! websocket)    ; Required for real-time graph updates
+(package! org-fragtog)  ; For "Instant" LaTeX (toggles when cursor enters/leaves)
+(package! ob-mermaid)   ; Mermaid diagram support
+(package! catppuccin-theme)
+(package! org-appear)  ; Makes org-mode hide markup until the cursor is on it
+(package! org-modern)

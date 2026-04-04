@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: Org Mode Template
+# key: org-template
+# --
+#+TITLE: `(format-time-string "%Y-%m-%d")`
+#+AUTHOR: `user-full-name`
+#+DATE: `(format-time-string "%A, %d de %B de %Y")`
+
+* TODO %?

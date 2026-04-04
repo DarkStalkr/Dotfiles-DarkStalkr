@@ -1,0 +1,1341 @@
+2026-04-02 20:04:15.550  INFO: Launching config: "/home/sohighman/.config/hyprui-v2/shell.qml"
+2026-04-02 20:04:15.551  INFO: Shell ID: "310283c6aa7ab0ca3c6a608509f1da3d" Path ID "310283c6aa7ab0ca3c6a608509f1da3d"
+2026-04-02 20:04:15.551  INFO: Saving logs to "/run/user/1000/quickshell/by-id/ag133bwct/log.qslog"
+2026-04-02 20:04:15.997 DEBUG qml: Weather: Reloading data...
+2026-04-02 20:04:16.150  WARN scene: QML Connections at @modules/TopBar.qml[216:5]: Detected function "onRawEvent" in Connections element. This is probably intended to be a signal handler but no signal of the target matches the name.
+2026-04-02 20:04:16.154  WARN scene: QML Connections at @modules/TopBar.qml[216:5]: Detected function "onRawEvent" in Connections element. This is probably intended to be a signal handler but no signal of the target matches the name.
+2026-04-02 20:04:16.159  WARN scene: @modules/TopBar.qml[217:-1]: ReferenceError: Hyprland is not defined
+2026-04-02 20:04:16.159  WARN scene: @modules/TopBar.qml[217:-1]: ReferenceError: Hyprland is not defined
+2026-04-02 20:04:16.178  INFO: Configuration Loaded
+2026-04-02 20:04:16.305  WARN qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: Connection already associated with an application ID")
+2026-04-02 20:04:21.168 DEBUG qml: Weather: ipinfo.io response: {
+  "ip": "189.228.78.189",
+  "hostname": "dsl-189-228-78-189-dyn.prod-infinitum.com.mx",
+  "city": "Mexico City",
+  "region": "Mexico City",
+  "country": "MX",
+  "loc": "19.4285,-99.1277",
+  "org": "AS8151 UNINET",
+  "postal": "03020",
+  "timezone": "America/Mexico_City",
+  "readme": "https://ipinfo.io/missingauth"
+}
+2026-04-02 20:04:21.168 DEBUG qml: Weather: Fetching weather data from: https://api.open-meteo.com/v1/forecast?latitude=19.4285&longitude=-99.1277&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto
+2026-04-02 20:04:22.307 DEBUG qml: Weather: open-meteo.com response: {
+  "latitude": 19.375,
+  "longitude": -99.125,
+  "generationtime_ms": 0.09846687316894531,
+  "utc_offset_seconds": -21600,
+  "timezone": "America/Mexico_City",
+  "timezone_abbreviation": "GMT-6",
+  "elevation": 2233,
+  "current_units": {
+    "time": "iso8601",
+    "interval": "seconds",
+    "temperature_2m": "°C",
+    "relative_humidity_2m": "%",
+    "apparent_temperature": "°C",
+    "is_day": "",
+    "weather_code": "wmo code",
+    "wind_speed_10m": "km/h"
+  },
+  "current": {
+    "time": "2026-04-02T20:00",
+    "interval": 900,
+    "temperature_2m": 19.2,
+    "relative_humidity_2m": 45,
+    "apparent_temperature": 17.2,
+    "is_day": 0,
+    "weather_code": 2,
+    "wind_speed_10m": 8.6
+  },
+  "daily_units": {
+    "time": "iso8601",
+    "weather_code": "wmo code",
+    "temperature_2m_max": "°C",
+    "temperature_2m_min": "°C",
+    "sunrise": "iso8601",
+    "sunset": "iso8601"
+  },
+  "daily": {
+    "time": [
+      "2026-04-02",
+      "2026-04-03",
+      "2026-04-04",
+      "2026-04-05",
+      "2026-04-06",
+      "2026-04-07",
+      "2026-04-08"
+    ],
+    "weather_code": [
+      2,
+      95,
+      95,
+      80,
+      3,
+      3,
+      95
+    ],
+    "temperature_2m_max": [
+      23.9,
+      26.1,
+      25.3,
+      22.6,
+      22.1,
+      22.5,
+      22.1
+    ],
+    "temperature_2m_min": [
+      10.6,
+      9.2,
+      11.7,
+      12.6,
+      11.3,
+      9.7,
+      12.1
+    ],
+    "sunrise": [
+      "2026-04-02T06:29",
+      "2026-04-03T06:28",
+      "2026-04-04T06:27",
+      "2026-04-05T06:26",
+      "2026-04-06T06:25",
+      "2026-04-07T06:24",
+      "2026-04-08T06:24"
+    ],
+    "sunset": [
+      "2026-04-02T18:50",
+      "2026-04-03T18:51",
+      "2026-04-04T18:51",
+      "2026-04-05T18:51",
+      "2026-04-06T18:51",
+      "2026-04-07T18:52",
+      "2026-04-08T18:52"
+    ]
+  }
+}
+2026-04-02 20:04:23.950 DEBUG qml: [Notifications] Received from notify-send: Keyboard in SP
+2026-04-02 20:04:25.448 DEBUG qml: [Notifications] Received from notify-send: Keyboard in EN
+2026-04-02 20:04:43.607  WARN scene: @popups/wallpaper/WallpaperPicker.qml[861:-1]: TypeError: Cannot read property 'verticalCenter' of null
+2026-04-02 20:04:43.607  WARN scene: @popups/wallpaper/WallpaperPicker.qml[861:-1]: TypeError: Cannot read property 'verticalCenter' of null
+2026-04-02 20:04:48.151  WARN scene: @popups/wallpaper/WallpaperPicker.qml[861:-1]: TypeError: Cannot read property 'verticalCenter' of null
+2026-04-02 20:04:48.151  WARN scene: @popups/wallpaper/WallpaperPicker.qml[861:-1]: TypeError: Cannot read property 'verticalCenter' of null
+2026-04-02 20:04:48.151  WARN scene: @popups/wallpaper/WallpaperPicker.qml[861:-1]: TypeError: Cannot read property 'verticalCenter' of null
+2026-04-02 20:04:48.151  WARN scene: @popups/wallpaper/WallpaperPicker.qml[861:-1]: TypeError: Cannot read property 'verticalCenter' of null
+2026-04-02 20:04:51.172  WARN scene: @popups/wallpaper/WallpaperPicker.qml[861:-1]: TypeError: Cannot read property 'verticalCenter' of null
+2026-04-02 20:04:51.173  WARN scene: @popups/wallpaper/WallpaperPicker.qml[861:-1]: TypeError: Cannot read property 'verticalCenter' of null
+2026-04-02 20:04:53.009  WARN scene: @popups/wallpaper/WallpaperPicker.qml[861:-1]: TypeError: Cannot read property 'verticalCenter' of null
+2026-04-02 20:04:53.009  WARN scene: @popups/wallpaper/WallpaperPicker.qml[861:-1]: TypeError: Cannot read property 'verticalCenter' of null
+2026-04-02 20:04:53.009  WARN scene: @popups/wallpaper/WallpaperPicker.qml[861:-1]: TypeError: Cannot read property 'verticalCenter' of null
+2026-04-02 20:04:53.009  WARN scene: @popups/wallpaper/WallpaperPicker.qml[861:-1]: TypeError: Cannot read property 'verticalCenter' of null
+2026-04-02 20:04:54.973  WARN scene: @popups/wallpaper/WallpaperPicker.qml[861:-1]: TypeError: Cannot read property 'verticalCenter' of null
+2026-04-02 20:04:54.973  WARN scene: @popups/wallpaper/WallpaperPicker.qml[861:-1]: TypeError: Cannot read property 'verticalCenter' of null
+2026-04-02 20:04:56.758  WARN scene: QML QQuickImage at @popups/wallpaper/WallpaperPicker.qml[1013:17]: Error decoding: file:///home/sohighman/.cache/wallpaper_picker/thumbs/kalipurpleultrawide.jpg: Unable to read image data
+2026-04-02 20:04:58.008  WARN scene: @popups/wallpaper/WallpaperPicker.qml[861:-1]: TypeError: Cannot read property 'verticalCenter' of null
+2026-04-02 20:04:58.008  WARN scene: @popups/wallpaper/WallpaperPicker.qml[861:-1]: TypeError: Cannot read property 'verticalCenter' of null
+2026-04-02 20:04:58.008  WARN scene: @popups/wallpaper/WallpaperPicker.qml[861:-1]: TypeError: Cannot read property 'verticalCenter' of null
+2026-04-02 20:04:58.008  WARN scene: @popups/wallpaper/WallpaperPicker.qml[861:-1]: TypeError: Cannot read property 'verticalCenter' of null
+2026-04-02 20:11:23.416  WARN scene: @popups/wallpaper/WallpaperPicker.qml[861:-1]: TypeError: Cannot read property 'verticalCenter' of null
+2026-04-02 20:11:23.416  WARN scene: @popups/wallpaper/WallpaperPicker.qml[861:-1]: TypeError: Cannot read property 'verticalCenter' of null
+2026-04-02 20:11:25.039  WARN scene: @popups/wallpaper/WallpaperPicker.qml[861:-1]: TypeError: Cannot read property 'verticalCenter' of null
+2026-04-02 20:11:25.039  WARN scene: @popups/wallpaper/WallpaperPicker.qml[861:-1]: TypeError: Cannot read property 'verticalCenter' of null
+2026-04-02 20:11:25.039  WARN scene: @popups/wallpaper/WallpaperPicker.qml[861:-1]: TypeError: Cannot read property 'verticalCenter' of null
+2026-04-02 20:11:25.039  WARN scene: @popups/wallpaper/WallpaperPicker.qml[861:-1]: TypeError: Cannot read property 'verticalCenter' of null
+2026-04-02 20:11:30.529 DEBUG qml: HyprUITheme: Cycling theme to: macchiato
+2026-04-02 20:11:31.102 DEBUG qml: HyprUITheme: Cycling theme to: frappe
+2026-04-02 20:11:31.618 DEBUG qml: HyprUITheme: Cycling theme to: latte
+2026-04-02 20:11:32.059 DEBUG qml: HyprUITheme: Cycling theme to: dracula
+2026-04-02 20:14:41.095 DEBUG qml: [Notifications] Received from starship: Command finished
+2026-04-02 20:17:44.087 DEBUG qml: [Notifications] Received from starship: Command finished
+2026-04-02 20:23:21.300 DEBUG qml: [Notifications] Received from notify-send: Keyboard in SP
+2026-04-02 20:23:21.301 DEBUG qml: [Notifications] Received from notify-send: Keyboard in SP
+2026-04-02 20:23:31.300 DEBUG qml: [Notifications] Received from notify-send: Keyboard in EN
+2026-04-02 20:23:31.337 DEBUG qml: [Notifications] Received from notify-send: Keyboard in EN
+2026-04-02 20:29:55.524 DEBUG qml: [Notifications] Received from starship: Command finished
+2026-04-02 20:34:16.284 DEBUG qml: Weather: Reloading data...
+2026-04-02 20:34:21.382 DEBUG qml: Weather: ipinfo.io response: {
+  "ip": "189.228.78.189",
+  "hostname": "dsl-189-228-78-189-dyn.prod-infinitum.com.mx",
+  "city": "Mexico City",
+  "region": "Mexico City",
+  "country": "MX",
+  "loc": "19.4285,-99.1277",
+  "org": "AS8151 UNINET",
+  "postal": "03020",
+  "timezone": "America/Mexico_City",
+  "readme": "https://ipinfo.io/missingauth"
+}
+2026-04-02 20:34:21.382 DEBUG qml: Weather: Fetching weather data from: https://api.open-meteo.com/v1/forecast?latitude=19.4285&longitude=-99.1277&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto
+2026-04-02 20:34:22.497 DEBUG qml: Weather: open-meteo.com response: {
+  "latitude": 19.375,
+  "longitude": -99.125,
+  "generationtime_ms": 0.1157522201538086,
+  "utc_offset_seconds": -21600,
+  "timezone": "America/Mexico_City",
+  "timezone_abbreviation": "GMT-6",
+  "elevation": 2233,
+  "current_units": {
+    "time": "iso8601",
+    "interval": "seconds",
+    "temperature_2m": "°C",
+    "relative_humidity_2m": "%",
+    "apparent_temperature": "°C",
+    "is_day": "",
+    "weather_code": "wmo code",
+    "wind_speed_10m": "km/h"
+  },
+  "current": {
+    "time": "2026-04-02T20:30",
+    "interval": 900,
+    "temperature_2m": 18.5,
+    "relative_humidity_2m": 48,
+    "apparent_temperature": 17.1,
+    "is_day": 0,
+    "weather_code": 2,
+    "wind_speed_10m": 4.7
+  },
+  "daily_units": {
+    "time": "iso8601",
+    "weather_code": "wmo code",
+    "temperature_2m_max": "°C",
+    "temperature_2m_min": "°C",
+    "sunrise": "iso8601",
+    "sunset": "iso8601"
+  },
+  "daily": {
+    "time": [
+      "2026-04-02",
+      "2026-04-03",
+      "2026-04-04",
+      "2026-04-05",
+      "2026-04-06",
+      "2026-04-07",
+      "2026-04-08"
+    ],
+    "weather_code": [
+      2,
+      95,
+      95,
+      80,
+      3,
+      3,
+      95
+    ],
+    "temperature_2m_max": [
+      23.9,
+      26.1,
+      25.3,
+      22.6,
+      22.1,
+      22.5,
+      22.1
+    ],
+    "temperature_2m_min": [
+      10.6,
+      9.2,
+      11.7,
+      12.6,
+      11.3,
+      9.7,
+      12.1
+    ],
+    "sunrise": [
+      "2026-04-02T06:29",
+      "2026-04-03T06:28",
+      "2026-04-04T06:27",
+      "2026-04-05T06:26",
+      "2026-04-06T06:25",
+      "2026-04-07T06:24",
+      "2026-04-08T06:24"
+    ],
+    "sunset": [
+      "2026-04-02T18:50",
+      "2026-04-03T18:51",
+      "2026-04-04T18:51",
+      "2026-04-05T18:51",
+      "2026-04-06T18:51",
+      "2026-04-07T18:52",
+      "2026-04-08T18:52"
+    ]
+  }
+}
+2026-04-02 20:37:27.254 DEBUG qml: [Notifications] Received from starship: Command finished
+2026-04-02 20:41:24.063 DEBUG qml: [Notifications] Received from starship: Command finished
+2026-04-02 20:44:08.253 DEBUG qml: [Notifications] Received from starship: Command finished
+2026-04-02 21:04:16.283 DEBUG qml: Weather: Reloading data...
+2026-04-02 21:04:21.402 DEBUG qml: Weather: ipinfo.io response: {
+  "ip": "189.228.78.189",
+  "hostname": "dsl-189-228-78-189-dyn.prod-infinitum.com.mx",
+  "city": "Mexico City",
+  "region": "Mexico City",
+  "country": "MX",
+  "loc": "19.4285,-99.1277",
+  "org": "AS8151 UNINET",
+  "postal": "03020",
+  "timezone": "America/Mexico_City",
+  "readme": "https://ipinfo.io/missingauth"
+}
+2026-04-02 21:04:21.402 DEBUG qml: Weather: Fetching weather data from: https://api.open-meteo.com/v1/forecast?latitude=19.4285&longitude=-99.1277&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto
+2026-04-02 21:04:22.569 DEBUG qml: Weather: open-meteo.com response: {
+  "latitude": 19.375,
+  "longitude": -99.125,
+  "generationtime_ms": 0.13363361358642578,
+  "utc_offset_seconds": -21600,
+  "timezone": "America/Mexico_City",
+  "timezone_abbreviation": "GMT-6",
+  "elevation": 2233,
+  "current_units": {
+    "time": "iso8601",
+    "interval": "seconds",
+    "temperature_2m": "°C",
+    "relative_humidity_2m": "%",
+    "apparent_temperature": "°C",
+    "is_day": "",
+    "weather_code": "wmo code",
+    "wind_speed_10m": "km/h"
+  },
+  "current": {
+    "time": "2026-04-02T21:00",
+    "interval": 900,
+    "temperature_2m": 18,
+    "relative_humidity_2m": 50,
+    "apparent_temperature": 16.6,
+    "is_day": 0,
+    "weather_code": 2,
+    "wind_speed_10m": 4.8
+  },
+  "daily_units": {
+    "time": "iso8601",
+    "weather_code": "wmo code",
+    "temperature_2m_max": "°C",
+    "temperature_2m_min": "°C",
+    "sunrise": "iso8601",
+    "sunset": "iso8601"
+  },
+  "daily": {
+    "time": [
+      "2026-04-02",
+      "2026-04-03",
+      "2026-04-04",
+      "2026-04-05",
+      "2026-04-06",
+      "2026-04-07",
+      "2026-04-08"
+    ],
+    "weather_code": [
+      2,
+      95,
+      95,
+      80,
+      3,
+      3,
+      95
+    ],
+    "temperature_2m_max": [
+      23.9,
+      26.1,
+      25.3,
+      22.6,
+      22.1,
+      22.5,
+      22.1
+    ],
+    "temperature_2m_min": [
+      10.6,
+      9.2,
+      11.7,
+      12.6,
+      11.3,
+      9.7,
+      12.1
+    ],
+    "sunrise": [
+      "2026-04-02T06:29",
+      "2026-04-03T06:28",
+      "2026-04-04T06:27",
+      "2026-04-05T06:26",
+      "2026-04-06T06:25",
+      "2026-04-07T06:24",
+      "2026-04-08T06:24"
+    ],
+    "sunset": [
+      "2026-04-02T18:50",
+      "2026-04-03T18:51",
+      "2026-04-04T18:51",
+      "2026-04-05T18:51",
+      "2026-04-06T18:51",
+      "2026-04-07T18:52",
+      "2026-04-08T18:52"
+    ]
+  }
+}
+2026-04-02 21:34:16.283 DEBUG qml: Weather: Reloading data...
+2026-04-02 21:34:21.383 DEBUG qml: Weather: ipinfo.io response: {
+  "ip": "189.228.78.189",
+  "hostname": "dsl-189-228-78-189-dyn.prod-infinitum.com.mx",
+  "city": "Mexico City",
+  "region": "Mexico City",
+  "country": "MX",
+  "loc": "19.4285,-99.1277",
+  "org": "AS8151 UNINET",
+  "postal": "03020",
+  "timezone": "America/Mexico_City",
+  "readme": "https://ipinfo.io/missingauth"
+}
+2026-04-02 21:34:21.383 DEBUG qml: Weather: Fetching weather data from: https://api.open-meteo.com/v1/forecast?latitude=19.4285&longitude=-99.1277&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto
+2026-04-02 21:34:22.513 DEBUG qml: Weather: open-meteo.com response: {
+  "latitude": 19.375,
+  "longitude": -99.125,
+  "generationtime_ms": 0.13840198516845703,
+  "utc_offset_seconds": -21600,
+  "timezone": "America/Mexico_City",
+  "timezone_abbreviation": "GMT-6",
+  "elevation": 2233,
+  "current_units": {
+    "time": "iso8601",
+    "interval": "seconds",
+    "temperature_2m": "°C",
+    "relative_humidity_2m": "%",
+    "apparent_temperature": "°C",
+    "is_day": "",
+    "weather_code": "wmo code",
+    "wind_speed_10m": "km/h"
+  },
+  "current": {
+    "time": "2026-04-02T21:30",
+    "interval": 900,
+    "temperature_2m": 17.2,
+    "relative_humidity_2m": 53,
+    "apparent_temperature": 15.8,
+    "is_day": 0,
+    "weather_code": 2,
+    "wind_speed_10m": 5.5
+  },
+  "daily_units": {
+    "time": "iso8601",
+    "weather_code": "wmo code",
+    "temperature_2m_max": "°C",
+    "temperature_2m_min": "°C",
+    "sunrise": "iso8601",
+    "sunset": "iso8601"
+  },
+  "daily": {
+    "time": [
+      "2026-04-02",
+      "2026-04-03",
+      "2026-04-04",
+      "2026-04-05",
+      "2026-04-06",
+      "2026-04-07",
+      "2026-04-08"
+    ],
+    "weather_code": [
+      2,
+      95,
+      95,
+      80,
+      3,
+      3,
+      95
+    ],
+    "temperature_2m_max": [
+      23.9,
+      26.1,
+      25.3,
+      22.6,
+      22.1,
+      22.5,
+      22.1
+    ],
+    "temperature_2m_min": [
+      10.6,
+      9.2,
+      11.7,
+      12.6,
+      11.3,
+      9.7,
+      12.1
+    ],
+    "sunrise": [
+      "2026-04-02T06:29",
+      "2026-04-03T06:28",
+      "2026-04-04T06:27",
+      "2026-04-05T06:26",
+      "2026-04-06T06:25",
+      "2026-04-07T06:24",
+      "2026-04-08T06:24"
+    ],
+    "sunset": [
+      "2026-04-02T18:50",
+      "2026-04-03T18:51",
+      "2026-04-04T18:51",
+      "2026-04-05T18:51",
+      "2026-04-06T18:51",
+      "2026-04-07T18:52",
+      "2026-04-08T18:52"
+    ]
+  }
+}
+2026-04-02 22:04:16.283 DEBUG qml: Weather: Reloading data...
+2026-04-02 22:04:16.398 DEBUG qml: Weather: ipinfo.io response: {
+  "ip": "189.228.78.189",
+  "hostname": "dsl-189-228-78-189-dyn.prod-infinitum.com.mx",
+  "city": "Mexico City",
+  "region": "Mexico City",
+  "country": "MX",
+  "loc": "19.4285,-99.1277",
+  "org": "AS8151 UNINET",
+  "postal": "03020",
+  "timezone": "America/Mexico_City",
+  "readme": "https://ipinfo.io/missingauth"
+}
+2026-04-02 22:04:16.399 DEBUG qml: Weather: Fetching weather data from: https://api.open-meteo.com/v1/forecast?latitude=19.4285&longitude=-99.1277&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto
+2026-04-02 22:04:22.489 DEBUG qml: Weather: open-meteo.com response: {
+  "latitude": 19.375,
+  "longitude": -99.125,
+  "generationtime_ms": 0.156402587890625,
+  "utc_offset_seconds": -21600,
+  "timezone": "America/Mexico_City",
+  "timezone_abbreviation": "GMT-6",
+  "elevation": 2233,
+  "current_units": {
+    "time": "iso8601",
+    "interval": "seconds",
+    "temperature_2m": "°C",
+    "relative_humidity_2m": "%",
+    "apparent_temperature": "°C",
+    "is_day": "",
+    "weather_code": "wmo code",
+    "wind_speed_10m": "km/h"
+  },
+  "current": {
+    "time": "2026-04-02T22:00",
+    "interval": 900,
+    "temperature_2m": 16.4,
+    "relative_humidity_2m": 61,
+    "apparent_temperature": 15.4,
+    "is_day": 0,
+    "weather_code": 1,
+    "wind_speed_10m": 5.1
+  },
+  "daily_units": {
+    "time": "iso8601",
+    "weather_code": "wmo code",
+    "temperature_2m_max": "°C",
+    "temperature_2m_min": "°C",
+    "sunrise": "iso8601",
+    "sunset": "iso8601"
+  },
+  "daily": {
+    "time": [
+      "2026-04-02",
+      "2026-04-03",
+      "2026-04-04",
+      "2026-04-05",
+      "2026-04-06",
+      "2026-04-07",
+      "2026-04-08"
+    ],
+    "weather_code": [
+      2,
+      80,
+      3,
+      95,
+      3,
+      3,
+      80
+    ],
+    "temperature_2m_max": [
+      23.9,
+      26.2,
+      25.4,
+      22,
+      22.2,
+      23.4,
+      22.1
+    ],
+    "temperature_2m_min": [
+      10.6,
+      10.2,
+      11.4,
+      12.9,
+      12,
+      9.9,
+      12.5
+    ],
+    "sunrise": [
+      "2026-04-02T06:29",
+      "2026-04-03T06:28",
+      "2026-04-04T06:27",
+      "2026-04-05T06:26",
+      "2026-04-06T06:25",
+      "2026-04-07T06:24",
+      "2026-04-08T06:24"
+    ],
+    "sunset": [
+      "2026-04-02T18:50",
+      "2026-04-03T18:51",
+      "2026-04-04T18:51",
+      "2026-04-05T18:51",
+      "2026-04-06T18:51",
+      "2026-04-07T18:52",
+      "2026-04-08T18:52"
+    ]
+  }
+}
+2026-04-02 22:34:16.284 DEBUG qml: Weather: Reloading data...
+2026-04-02 22:34:21.403 DEBUG qml: Weather: ipinfo.io response: {
+  "ip": "189.228.78.189",
+  "hostname": "dsl-189-228-78-189-dyn.prod-infinitum.com.mx",
+  "city": "Mexico City",
+  "region": "Mexico City",
+  "country": "MX",
+  "loc": "19.4285,-99.1277",
+  "org": "AS8151 UNINET",
+  "postal": "03020",
+  "timezone": "America/Mexico_City",
+  "readme": "https://ipinfo.io/missingauth"
+}
+2026-04-02 22:34:21.403 DEBUG qml: Weather: Fetching weather data from: https://api.open-meteo.com/v1/forecast?latitude=19.4285&longitude=-99.1277&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto
+2026-04-02 22:34:22.528 DEBUG qml: Weather: open-meteo.com response: {
+  "latitude": 19.375,
+  "longitude": -99.125,
+  "generationtime_ms": 0.15270709991455078,
+  "utc_offset_seconds": -21600,
+  "timezone": "America/Mexico_City",
+  "timezone_abbreviation": "GMT-6",
+  "elevation": 2233,
+  "current_units": {
+    "time": "iso8601",
+    "interval": "seconds",
+    "temperature_2m": "°C",
+    "relative_humidity_2m": "%",
+    "apparent_temperature": "°C",
+    "is_day": "",
+    "weather_code": "wmo code",
+    "wind_speed_10m": "km/h"
+  },
+  "current": {
+    "time": "2026-04-02T22:30",
+    "interval": 900,
+    "temperature_2m": 15.8,
+    "relative_humidity_2m": 64,
+    "apparent_temperature": 14.7,
+    "is_day": 0,
+    "weather_code": 1,
+    "wind_speed_10m": 5.4
+  },
+  "daily_units": {
+    "time": "iso8601",
+    "weather_code": "wmo code",
+    "temperature_2m_max": "°C",
+    "temperature_2m_min": "°C",
+    "sunrise": "iso8601",
+    "sunset": "iso8601"
+  },
+  "daily": {
+    "time": [
+      "2026-04-02",
+      "2026-04-03",
+      "2026-04-04",
+      "2026-04-05",
+      "2026-04-06",
+      "2026-04-07",
+      "2026-04-08"
+    ],
+    "weather_code": [
+      2,
+      80,
+      3,
+      95,
+      3,
+      3,
+      80
+    ],
+    "temperature_2m_max": [
+      23.9,
+      26.2,
+      25.4,
+      22,
+      22.2,
+      23.4,
+      22.1
+    ],
+    "temperature_2m_min": [
+      10.6,
+      10.2,
+      11.4,
+      12.9,
+      12,
+      9.9,
+      12.5
+    ],
+    "sunrise": [
+      "2026-04-02T06:29",
+      "2026-04-03T06:28",
+      "2026-04-04T06:27",
+      "2026-04-05T06:26",
+      "2026-04-06T06:25",
+      "2026-04-07T06:24",
+      "2026-04-08T06:24"
+    ],
+    "sunset": [
+      "2026-04-02T18:50",
+      "2026-04-03T18:51",
+      "2026-04-04T18:51",
+      "2026-04-05T18:51",
+      "2026-04-06T18:51",
+      "2026-04-07T18:52",
+      "2026-04-08T18:52"
+    ]
+  }
+}
+2026-04-02 23:04:16.283 DEBUG qml: Weather: Reloading data...
+2026-04-02 23:04:16.475 DEBUG qml: Weather: ipinfo.io response: {
+  "ip": "189.228.78.189",
+  "hostname": "dsl-189-228-78-189-dyn.prod-infinitum.com.mx",
+  "city": "Mexico City",
+  "region": "Mexico City",
+  "country": "MX",
+  "loc": "19.4285,-99.1277",
+  "org": "AS8151 UNINET",
+  "postal": "03020",
+  "timezone": "America/Mexico_City",
+  "readme": "https://ipinfo.io/missingauth"
+}
+2026-04-02 23:04:16.476 DEBUG qml: Weather: Fetching weather data from: https://api.open-meteo.com/v1/forecast?latitude=19.4285&longitude=-99.1277&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto
+2026-04-02 23:04:22.827 DEBUG qml: Weather: open-meteo.com response: {
+  "latitude": 19.375,
+  "longitude": -99.125,
+  "generationtime_ms": 0.11050701141357422,
+  "utc_offset_seconds": -21600,
+  "timezone": "America/Mexico_City",
+  "timezone_abbreviation": "GMT-6",
+  "elevation": 2233,
+  "current_units": {
+    "time": "iso8601",
+    "interval": "seconds",
+    "temperature_2m": "°C",
+    "relative_humidity_2m": "%",
+    "apparent_temperature": "°C",
+    "is_day": "",
+    "weather_code": "wmo code",
+    "wind_speed_10m": "km/h"
+  },
+  "current": {
+    "time": "2026-04-02T23:00",
+    "interval": 900,
+    "temperature_2m": 15.3,
+    "relative_humidity_2m": 66,
+    "apparent_temperature": 14.3,
+    "is_day": 0,
+    "weather_code": 1,
+    "wind_speed_10m": 5.4
+  },
+  "daily_units": {
+    "time": "iso8601",
+    "weather_code": "wmo code",
+    "temperature_2m_max": "°C",
+    "temperature_2m_min": "°C",
+    "sunrise": "iso8601",
+    "sunset": "iso8601"
+  },
+  "daily": {
+    "time": [
+      "2026-04-02",
+      "2026-04-03",
+      "2026-04-04",
+      "2026-04-05",
+      "2026-04-06",
+      "2026-04-07",
+      "2026-04-08"
+    ],
+    "weather_code": [
+      2,
+      80,
+      3,
+      95,
+      3,
+      3,
+      80
+    ],
+    "temperature_2m_max": [
+      23.9,
+      26.2,
+      25.4,
+      22,
+      22.2,
+      23.4,
+      22.1
+    ],
+    "temperature_2m_min": [
+      10.6,
+      10.2,
+      11.4,
+      12.9,
+      12,
+      9.9,
+      12.5
+    ],
+    "sunrise": [
+      "2026-04-02T06:29",
+      "2026-04-03T06:28",
+      "2026-04-04T06:27",
+      "2026-04-05T06:26",
+      "2026-04-06T06:25",
+      "2026-04-07T06:24",
+      "2026-04-08T06:24"
+    ],
+    "sunset": [
+      "2026-04-02T18:50",
+      "2026-04-03T18:51",
+      "2026-04-04T18:51",
+      "2026-04-05T18:51",
+      "2026-04-06T18:51",
+      "2026-04-07T18:52",
+      "2026-04-08T18:52"
+    ]
+  }
+}
+2026-04-02 23:34:16.283 DEBUG qml: Weather: Reloading data...
+2026-04-02 23:34:21.449 DEBUG qml: Weather: ipinfo.io response: {
+  "ip": "189.228.78.189",
+  "hostname": "dsl-189-228-78-189-dyn.prod-infinitum.com.mx",
+  "city": "Mexico City",
+  "region": "Mexico City",
+  "country": "MX",
+  "loc": "19.4285,-99.1277",
+  "org": "AS8151 UNINET",
+  "postal": "03020",
+  "timezone": "America/Mexico_City",
+  "readme": "https://ipinfo.io/missingauth"
+}
+2026-04-02 23:34:21.449 DEBUG qml: Weather: Fetching weather data from: https://api.open-meteo.com/v1/forecast?latitude=19.4285&longitude=-99.1277&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto
+2026-04-02 23:34:22.613 DEBUG qml: Weather: open-meteo.com response: {
+  "latitude": 19.375,
+  "longitude": -99.125,
+  "generationtime_ms": 0.1747608184814453,
+  "utc_offset_seconds": -21600,
+  "timezone": "America/Mexico_City",
+  "timezone_abbreviation": "GMT-6",
+  "elevation": 2233,
+  "current_units": {
+    "time": "iso8601",
+    "interval": "seconds",
+    "temperature_2m": "°C",
+    "relative_humidity_2m": "%",
+    "apparent_temperature": "°C",
+    "is_day": "",
+    "weather_code": "wmo code",
+    "wind_speed_10m": "km/h"
+  },
+  "current": {
+    "time": "2026-04-02T23:30",
+    "interval": 900,
+    "temperature_2m": 14.8,
+    "relative_humidity_2m": 68,
+    "apparent_temperature": 13.8,
+    "is_day": 0,
+    "weather_code": 1,
+    "wind_speed_10m": 5.4
+  },
+  "daily_units": {
+    "time": "iso8601",
+    "weather_code": "wmo code",
+    "temperature_2m_max": "°C",
+    "temperature_2m_min": "°C",
+    "sunrise": "iso8601",
+    "sunset": "iso8601"
+  },
+  "daily": {
+    "time": [
+      "2026-04-02",
+      "2026-04-03",
+      "2026-04-04",
+      "2026-04-05",
+      "2026-04-06",
+      "2026-04-07",
+      "2026-04-08"
+    ],
+    "weather_code": [
+      2,
+      80,
+      3,
+      95,
+      3,
+      3,
+      80
+    ],
+    "temperature_2m_max": [
+      23.9,
+      26.2,
+      25.4,
+      22,
+      22.2,
+      23.4,
+      22.1
+    ],
+    "temperature_2m_min": [
+      10.6,
+      10.2,
+      11.4,
+      12.9,
+      12,
+      9.9,
+      12.5
+    ],
+    "sunrise": [
+      "2026-04-02T06:29",
+      "2026-04-03T06:28",
+      "2026-04-04T06:27",
+      "2026-04-05T06:26",
+      "2026-04-06T06:25",
+      "2026-04-07T06:24",
+      "2026-04-08T06:24"
+    ],
+    "sunset": [
+      "2026-04-02T18:50",
+      "2026-04-03T18:51",
+      "2026-04-04T18:51",
+      "2026-04-05T18:51",
+      "2026-04-06T18:51",
+      "2026-04-07T18:52",
+      "2026-04-08T18:52"
+    ]
+  }
+}
+2026-04-03 00:04:16.283 DEBUG qml: Weather: Reloading data...
+2026-04-03 00:04:21.592 DEBUG qml: Weather: ipinfo.io response: {
+  "ip": "189.228.78.189",
+  "hostname": "dsl-189-228-78-189-dyn.prod-infinitum.com.mx",
+  "city": "Mexico City",
+  "region": "Mexico City",
+  "country": "MX",
+  "loc": "19.4285,-99.1277",
+  "org": "AS8151 UNINET",
+  "postal": "03020",
+  "timezone": "America/Mexico_City",
+  "readme": "https://ipinfo.io/missingauth"
+}
+2026-04-03 00:04:21.592 DEBUG qml: Weather: Fetching weather data from: https://api.open-meteo.com/v1/forecast?latitude=19.4285&longitude=-99.1277&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto
+2026-04-03 00:04:22.886 DEBUG qml: Weather: open-meteo.com response: {
+  "latitude": 19.375,
+  "longitude": -99.125,
+  "generationtime_ms": 0.1081228256225586,
+  "utc_offset_seconds": -21600,
+  "timezone": "America/Mexico_City",
+  "timezone_abbreviation": "GMT-6",
+  "elevation": 2233,
+  "current_units": {
+    "time": "iso8601",
+    "interval": "seconds",
+    "temperature_2m": "°C",
+    "relative_humidity_2m": "%",
+    "apparent_temperature": "°C",
+    "is_day": "",
+    "weather_code": "wmo code",
+    "wind_speed_10m": "km/h"
+  },
+  "current": {
+    "time": "2026-04-03T00:00",
+    "interval": 900,
+    "temperature_2m": 14.5,
+    "relative_humidity_2m": 69,
+    "apparent_temperature": 13.5,
+    "is_day": 0,
+    "weather_code": 2,
+    "wind_speed_10m": 5.1
+  },
+  "daily_units": {
+    "time": "iso8601",
+    "weather_code": "wmo code",
+    "temperature_2m_max": "°C",
+    "temperature_2m_min": "°C",
+    "sunrise": "iso8601",
+    "sunset": "iso8601"
+  },
+  "daily": {
+    "time": [
+      "2026-04-03",
+      "2026-04-04",
+      "2026-04-05",
+      "2026-04-06",
+      "2026-04-07",
+      "2026-04-08",
+      "2026-04-09"
+    ],
+    "weather_code": [
+      80,
+      3,
+      95,
+      3,
+      3,
+      80,
+      95
+    ],
+    "temperature_2m_max": [
+      26.2,
+      25.4,
+      22,
+      22.2,
+      23.4,
+      22.1,
+      22.7
+    ],
+    "temperature_2m_min": [
+      10.2,
+      11.4,
+      12.9,
+      12,
+      9.9,
+      12.5,
+      11.8
+    ],
+    "sunrise": [
+      "2026-04-03T06:28",
+      "2026-04-04T06:27",
+      "2026-04-05T06:26",
+      "2026-04-06T06:25",
+      "2026-04-07T06:24",
+      "2026-04-08T06:24",
+      "2026-04-09T06:23"
+    ],
+    "sunset": [
+      "2026-04-03T18:51",
+      "2026-04-04T18:51",
+      "2026-04-05T18:51",
+      "2026-04-06T18:51",
+      "2026-04-07T18:52",
+      "2026-04-08T18:52",
+      "2026-04-09T18:52"
+    ]
+  }
+}
+2026-04-03 00:34:16.283 DEBUG qml: Weather: Reloading data...
+2026-04-03 00:34:21.400 DEBUG qml: Weather: ipinfo.io response: {
+  "ip": "189.228.78.189",
+  "hostname": "dsl-189-228-78-189-dyn.prod-infinitum.com.mx",
+  "city": "Mexico City",
+  "region": "Mexico City",
+  "country": "MX",
+  "loc": "19.4285,-99.1277",
+  "org": "AS8151 UNINET",
+  "postal": "03020",
+  "timezone": "America/Mexico_City",
+  "readme": "https://ipinfo.io/missingauth"
+}
+2026-04-03 00:34:21.400 DEBUG qml: Weather: Fetching weather data from: https://api.open-meteo.com/v1/forecast?latitude=19.4285&longitude=-99.1277&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto
+2026-04-03 00:34:22.574 DEBUG qml: Weather: open-meteo.com response: {
+  "latitude": 19.375,
+  "longitude": -99.125,
+  "generationtime_ms": 0.15485286712646484,
+  "utc_offset_seconds": -21600,
+  "timezone": "America/Mexico_City",
+  "timezone_abbreviation": "GMT-6",
+  "elevation": 2233,
+  "current_units": {
+    "time": "iso8601",
+    "interval": "seconds",
+    "temperature_2m": "°C",
+    "relative_humidity_2m": "%",
+    "apparent_temperature": "°C",
+    "is_day": "",
+    "weather_code": "wmo code",
+    "wind_speed_10m": "km/h"
+  },
+  "current": {
+    "time": "2026-04-03T00:30",
+    "interval": 900,
+    "temperature_2m": 14,
+    "relative_humidity_2m": 70,
+    "apparent_temperature": 12.9,
+    "is_day": 0,
+    "weather_code": 2,
+    "wind_speed_10m": 5.1
+  },
+  "daily_units": {
+    "time": "iso8601",
+    "weather_code": "wmo code",
+    "temperature_2m_max": "°C",
+    "temperature_2m_min": "°C",
+    "sunrise": "iso8601",
+    "sunset": "iso8601"
+  },
+  "daily": {
+    "time": [
+      "2026-04-03",
+      "2026-04-04",
+      "2026-04-05",
+      "2026-04-06",
+      "2026-04-07",
+      "2026-04-08",
+      "2026-04-09"
+    ],
+    "weather_code": [
+      80,
+      3,
+      95,
+      3,
+      3,
+      80,
+      95
+    ],
+    "temperature_2m_max": [
+      26.2,
+      25.4,
+      22,
+      22.2,
+      23.4,
+      22.1,
+      22.7
+    ],
+    "temperature_2m_min": [
+      10.2,
+      11.4,
+      12.9,
+      12,
+      9.9,
+      12.5,
+      11.8
+    ],
+    "sunrise": [
+      "2026-04-03T06:28",
+      "2026-04-04T06:27",
+      "2026-04-05T06:26",
+      "2026-04-06T06:25",
+      "2026-04-07T06:24",
+      "2026-04-08T06:24",
+      "2026-04-09T06:23"
+    ],
+    "sunset": [
+      "2026-04-03T18:51",
+      "2026-04-04T18:51",
+      "2026-04-05T18:51",
+      "2026-04-06T18:51",
+      "2026-04-07T18:52",
+      "2026-04-08T18:52",
+      "2026-04-09T18:52"
+    ]
+  }
+}
+2026-04-03 01:04:16.284 DEBUG qml: Weather: Reloading data...
+2026-04-03 01:04:16.391 DEBUG qml: Weather: ipinfo.io response: {
+  "ip": "189.228.78.189",
+  "hostname": "dsl-189-228-78-189-dyn.prod-infinitum.com.mx",
+  "city": "Mexico City",
+  "region": "Mexico City",
+  "country": "MX",
+  "loc": "19.4285,-99.1277",
+  "org": "AS8151 UNINET",
+  "postal": "03020",
+  "timezone": "America/Mexico_City",
+  "readme": "https://ipinfo.io/missingauth"
+}
+2026-04-03 01:04:16.391 DEBUG qml: Weather: Fetching weather data from: https://api.open-meteo.com/v1/forecast?latitude=19.4285&longitude=-99.1277&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto
+2026-04-03 01:04:22.545 DEBUG qml: Weather: open-meteo.com response: {
+  "latitude": 19.375,
+  "longitude": -99.125,
+  "generationtime_ms": 0.1480579376220703,
+  "utc_offset_seconds": -21600,
+  "timezone": "America/Mexico_City",
+  "timezone_abbreviation": "GMT-6",
+  "elevation": 2233,
+  "current_units": {
+    "time": "iso8601",
+    "interval": "seconds",
+    "temperature_2m": "°C",
+    "relative_humidity_2m": "%",
+    "apparent_temperature": "°C",
+    "is_day": "",
+    "weather_code": "wmo code",
+    "wind_speed_10m": "km/h"
+  },
+  "current": {
+    "time": "2026-04-03T01:00",
+    "interval": 900,
+    "temperature_2m": 13.6,
+    "relative_humidity_2m": 71,
+    "apparent_temperature": 12.4,
+    "is_day": 0,
+    "weather_code": 1,
+    "wind_speed_10m": 5.5
+  },
+  "daily_units": {
+    "time": "iso8601",
+    "weather_code": "wmo code",
+    "temperature_2m_max": "°C",
+    "temperature_2m_min": "°C",
+    "sunrise": "iso8601",
+    "sunset": "iso8601"
+  },
+  "daily": {
+    "time": [
+      "2026-04-03",
+      "2026-04-04",
+      "2026-04-05",
+      "2026-04-06",
+      "2026-04-07",
+      "2026-04-08",
+      "2026-04-09"
+    ],
+    "weather_code": [
+      80,
+      3,
+      95,
+      3,
+      3,
+      80,
+      95
+    ],
+    "temperature_2m_max": [
+      26.2,
+      25.4,
+      22,
+      22.2,
+      23.4,
+      22.1,
+      22.7
+    ],
+    "temperature_2m_min": [
+      10.2,
+      11.4,
+      12.9,
+      12,
+      9.9,
+      12.5,
+      11.8
+    ],
+    "sunrise": [
+      "2026-04-03T06:28",
+      "2026-04-04T06:27",
+      "2026-04-05T06:26",
+      "2026-04-06T06:25",
+      "2026-04-07T06:24",
+      "2026-04-08T06:24",
+      "2026-04-09T06:23"
+    ],
+    "sunset": [
+      "2026-04-03T18:51",
+      "2026-04-04T18:51",
+      "2026-04-05T18:51",
+      "2026-04-06T18:51",
+      "2026-04-07T18:52",
+      "2026-04-08T18:52",
+      "2026-04-09T18:52"
+    ]
+  }
+}
+2026-04-03 01:34:16.283 DEBUG qml: Weather: Reloading data...
+2026-04-03 01:34:21.385 DEBUG qml: Weather: ipinfo.io response: {
+  "ip": "189.228.78.189",
+  "hostname": "dsl-189-228-78-189-dyn.prod-infinitum.com.mx",
+  "city": "Mexico City",
+  "region": "Mexico City",
+  "country": "MX",
+  "loc": "19.4285,-99.1277",
+  "org": "AS8151 UNINET",
+  "postal": "03020",
+  "timezone": "America/Mexico_City",
+  "readme": "https://ipinfo.io/missingauth"
+}
+2026-04-03 01:34:21.385 DEBUG qml: Weather: Fetching weather data from: https://api.open-meteo.com/v1/forecast?latitude=19.4285&longitude=-99.1277&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto
+2026-04-03 01:34:22.468 DEBUG qml: Weather: open-meteo.com response: {
+  "latitude": 19.375,
+  "longitude": -99.125,
+  "generationtime_ms": 0.10514259338378906,
+  "utc_offset_seconds": -21600,
+  "timezone": "America/Mexico_City",
+  "timezone_abbreviation": "GMT-6",
+  "elevation": 2233,
+  "current_units": {
+    "time": "iso8601",
+    "interval": "seconds",
+    "temperature_2m": "°C",
+    "relative_humidity_2m": "%",
+    "apparent_temperature": "°C",
+    "is_day": "",
+    "weather_code": "wmo code",
+    "wind_speed_10m": "km/h"
+  },
+  "current": {
+    "time": "2026-04-03T01:30",
+    "interval": 900,
+    "temperature_2m": 13.2,
+    "relative_humidity_2m": 72,
+    "apparent_temperature": 12,
+    "is_day": 0,
+    "weather_code": 1,
+    "wind_speed_10m": 5.2
+  },
+  "daily_units": {
+    "time": "iso8601",
+    "weather_code": "wmo code",
+    "temperature_2m_max": "°C",
+    "temperature_2m_min": "°C",
+    "sunrise": "iso8601",
+    "sunset": "iso8601"
+  },
+  "daily": {
+    "time": [
+      "2026-04-03",
+      "2026-04-04",
+      "2026-04-05",
+      "2026-04-06",
+      "2026-04-07",
+      "2026-04-08",
+      "2026-04-09"
+    ],
+    "weather_code": [
+      80,
+      3,
+      95,
+      3,
+      3,
+      80,
+      95
+    ],
+    "temperature_2m_max": [
+      26.2,
+      25.4,
+      22,
+      22.2,
+      23.4,
+      22.1,
+      22.7
+    ],
+    "temperature_2m_min": [
+      10.2,
+      11.4,
+      12.9,
+      12,
+      9.9,
+      12.5,
+      11.8
+    ],
+    "sunrise": [
+      "2026-04-03T06:28",
+      "2026-04-04T06:27",
+      "2026-04-05T06:26",
+      "2026-04-06T06:25",
+      "2026-04-07T06:24",
+      "2026-04-08T06:24",
+      "2026-04-09T06:23"
+    ],
+    "sunset": [
+      "2026-04-03T18:51",
+      "2026-04-04T18:51",
+      "2026-04-05T18:51",
+      "2026-04-06T18:51",
+      "2026-04-07T18:52",
+      "2026-04-08T18:52",
+      "2026-04-09T18:52"
+    ]
+  }
+}
+2026-04-03 01:39:42.045  WARN quickshell.dbus.properties: Error updating property org.mpris.MediaPlayer2.firefox.instance_1_65/org/mpris/MediaPlayer2/org.mpris.MediaPlayer2.Player:Position
+2026-04-03 01:39:42.045  WARN quickshell.dbus.properties: QDBusError("org.freedesktop.DBus.Error.ServiceUnknown", "The name is not activatable")
+2026-04-03 01:39:42.045  WARN quickshell.dbus.properties: Error updating property org.mpris.MediaPlayer2.firefox.instance_1_65/org/mpris/MediaPlayer2/org.mpris.MediaPlayer2.Player:Position
+2026-04-03 01:39:42.045  WARN quickshell.dbus.properties: QDBusError("org.freedesktop.DBus.Error.ServiceUnknown", "The name is not activatable")
+2026-04-03 01:39:42.045  WARN quickshell.dbus.properties: Error updating property org.mpris.MediaPlayer2.firefox.instance_1_65/org/mpris/MediaPlayer2/org.mpris.MediaPlayer2.Player:Position
+2026-04-03 01:39:42.045  WARN quickshell.dbus.properties: QDBusError("org.freedesktop.DBus.Error.ServiceUnknown", "The name is not activatable")
+2026-04-03 01:46:10.287 DEBUG qml: [Notifications] Received from starship: Command finished
