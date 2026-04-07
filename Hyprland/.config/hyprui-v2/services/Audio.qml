@@ -14,11 +14,20 @@ Singleton {
     readonly property PwNode sink: Pipewire.defaultAudioSink
     readonly property PwNode source: Pipewire.defaultAudioSource
 
+    // Track all nodes so that sink/source switches work reliably
+    PwObjectTracker {
+        objects: Pipewire.nodes.values
+    }
+
     readonly property bool muted: !!sink?.audio?.muted
     readonly property real volume: {
         const v = sink?.audio?.volume;
         return (v != null && !isNaN(v)) ? v : 0;
     }
+
+    // Emitted when the default sink itself changes (not just volume)
+    signal defaultSinkChanged()
+    onSinkChanged: defaultSinkChanged()
 
     function increaseVolume(): void {
         setVolume(volume + Config.services.audioIncrement);
@@ -29,17 +38,15 @@ Singleton {
     }
 
     function setVolume(newVolume: real): void {
-        if (sink?.ready && sink?.audio) {
-            sink.audio.muted = false;
-            sink.audio.volume = Math.max(0, Math.min(1.5, newVolume)); // Max 150%
+        const s = Pipewire.defaultAudioSink;
+        if (s?.ready && s?.audio) {
+            s.audio.muted = false;
+            s.audio.volume = Math.max(0, Math.min(1.5, newVolume));
         }
     }
 
     function toggleMute(): void {
-        if (sink?.audio) sink.audio.muted = !sink.audio.muted;
-    }
-
-    PwObjectTracker {
-        objects: [Pipewire.defaultAudioSink, Pipewire.defaultAudioSource]
+        const s = Pipewire.defaultAudioSink;
+        if (s?.audio) s.audio.muted = !s.audio.muted;
     }
 }

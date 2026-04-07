@@ -65,20 +65,50 @@ toggle_wifi() {
 }
 
 ## BLUETOOTH
+# NOTE: `bluetoothctl <subcommand>` (non-interactive form) silently returns
+# nothing on some bluez versions on this machine. We use D-Bus via busctl for
+# state queries (instant, no TTY) and pipe `bluetoothctl` via stdin only when
+# we need a device list (subcommand form returns empty here).
+
+_bt_adapter_path() {
+    # Pick the first hciX exposed under /sys/class/bluetooth — usually hci0.
+    local first
+    first=$(ls /sys/class/bluetooth/ 2>/dev/null | grep -E '^hci[0-9]+$' | head -n1)
+    [ -z "$first" ] && first="hci0"
+    echo "/org/bluez/$first"
+}
+
 get_bt_status() {
-    if bluetoothctl show 2>/dev/null | grep -q "Powered: yes"; then
+    # Service is the source of truth — bluetooth-control.sh toggles it via systemctl.
+    if ! systemctl is-active --quiet bluetooth.service 2>/dev/null; then
+        echo "off"
+        return
+    fi
+    local powered
+    powered=$(busctl --system get-property org.bluez "$(_bt_adapter_path)" \
+        org.bluez.Adapter1 Powered 2>/dev/null)
+    if [ "$powered" = "b true" ]; then
         echo "on"
     else
         echo "off"
     fi
 }
 
+_bt_connected_name() {
+    # Pipe via stdin — subcommand form is broken on this bluez build.
+    # Strip ANSI escapes that bluetoothctl interleaves, then grab the first
+    # "Device <MAC> <Name>" line and drop the prefix.
+    echo "devices Connected" | bluetoothctl 2>/dev/null \
+        | sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' \
+        | grep -Eo 'Device [0-9A-F:]{17} .*' \
+        | head -n1 \
+        | sed -E 's/^Device [0-9A-F:]{17} //'
+}
+
 get_bt_icon() {
     local status=$(get_bt_status)
-    
     if [ "$status" = "on" ]; then
-        # Check if any device is connected
-        if bluetoothctl devices Connected 2>/dev/null | grep -q "Device"; then
+        if [ -n "$(_bt_connected_name)" ]; then
             echo "󰂱"  # Connected
         else
             echo "󰂯"  # On but not connected
@@ -89,16 +119,16 @@ get_bt_icon() {
 }
 
 get_bt_connected_device() {
-    if [ "$(get_bt_status)" = "on" ]; then
-        # Get name, trim whitespace
-        local device=$(bluetoothctl devices Connected 2>/dev/null | head -n1 | cut -d' ' -f3-)
-        if [ -z "$device" ]; then
-            echo "Disconnected"
-        else
-            echo "$device"
-        fi
-    else
+    if [ "$(get_bt_status)" != "on" ]; then
         echo "Off"
+        return
+    fi
+    local device
+    device=$(_bt_connected_name)
+    if [ -z "$device" ]; then
+        echo "Disconnected"
+    else
+        echo "$device"
     fi
 }
 

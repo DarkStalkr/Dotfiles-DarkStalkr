@@ -67,15 +67,24 @@ Scope {
             right: true
         }
         
-        implicitWidth: 400
-        implicitHeight: 180
+        implicitWidth: 320
+        implicitHeight: 130
         color: "transparent"
+
+        // Confine pointer input to the card; the rest of the PanelWindow is
+        // click-through so it doesn't block apps/desktop behind it.
+        mask: Region {
+            x: container.x
+            y: container.y
+            width: container.width
+            height: container.height
+        }
 
         Rectangle {
             id: container
             anchors.fill: parent
-            anchors.margins: 20
-            
+            anchors.margins: 12
+
             radius: HyprUITheme.active.rounding ?? 12
             color: HyprUITheme.active.background ?? "#1e1e2e"
             opacity: active ? 0.95 : 0.0
@@ -86,20 +95,16 @@ Scope {
             Behavior on opacity { NumberAnimation { duration: 200 } }
             Behavior on scale { NumberAnimation { duration: 200; easing.type: Easing.OutBack } }
 
-            MouseArea {
-                anchors.fill: parent
-                onClicked: active = false
-            }
-
             RowLayout {
                 anchors.fill: parent
-                anchors.margins: 15
-                spacing: 15
+                anchors.margins: 10
+                spacing: 10
 
                 // Album Art
                 Rectangle {
-                    width: 100
-                    height: 100
+                    Layout.preferredWidth: 70
+                    Layout.preferredHeight: 70
+                    Layout.alignment: Qt.AlignVCenter
                     radius: (HyprUITheme.active.rounding ?? 12) / 2
                     clip: true
                     color: HyprUITheme.active.surface ?? "#313244"
@@ -110,12 +115,12 @@ Scope {
                         source: player?.trackArtUrl ?? ""
                         fillMode: Image.PreserveAspectCrop
                         asynchronous: true
-                        
+
                         Text {
                             visible: parent.status !== Image.Ready
                             anchors.centerIn: parent
                             text: "󰝚"
-                            font.pixelSize: 40
+                            font.pixelSize: 28
                             color: HyprUITheme.active.text ?? "white"
                             opacity: 0.3
                         }
@@ -125,12 +130,13 @@ Scope {
                 // Metadata & Controls
                 ColumnLayout {
                     Layout.fillWidth: true
-                    spacing: 5
+                    Layout.fillHeight: true
+                    spacing: 3
 
                     Text {
                         Layout.fillWidth: true
                         text: (player?.trackTitle || "Not Playing")
-                        font.pixelSize: 18
+                        font.pixelSize: 13
                         font.bold: true
                         color: HyprUITheme.active.text ?? "white"
                         elide: Text.ElideRight
@@ -140,17 +146,15 @@ Scope {
                         Layout.fillWidth: true
                         text: {
                             if (player?.trackArtists) {
-                                // Check if trackArtists is an array before joining
                                 if (Array.isArray(player.trackArtists)) {
                                     return player.trackArtists.join(", ");
                                 } else {
-                                    // If it's not an array, assume it's a string and return it directly
                                     return player.trackArtists;
                                 }
                             }
                             return player?.trackArtist || "Unknown Artist";
                         }
-                        font.pixelSize: 14
+                        font.pixelSize: 11
                         color: HyprUITheme.active.text ?? "white"
                         opacity: 0.7
                         elide: Text.ElideRight
@@ -161,14 +165,14 @@ Scope {
                     // Progress Bar
                     Rectangle {
                         Layout.fillWidth: true
-                        Layout.preferredHeight: 4
-                        radius: 2
+                        Layout.preferredHeight: 3
+                        radius: 1.5
                         color: HyprUITheme.active.surface ?? "#313244"
 
                         Rectangle {
                             width: parent.width * (player?.position / player?.length || 0)
                             height: parent.height
-                            radius: 2
+                            radius: 1.5
                             color: HyprUITheme.primary ?? "#cba6f7"
                         }
                     }
@@ -176,36 +180,37 @@ Scope {
                     // Media Controls
                     RowLayout {
                         Layout.alignment: Qt.AlignHCenter
-                        spacing: 20
+                        Layout.topMargin: 2
+                        spacing: 14
 
                         Text {
                             text: "󰒮"
-                            font.pixelSize: 20
+                            font.pixelSize: 15
                             color: !!(player?.canGoPrevious) ? (HyprUITheme.active.text ?? "white") : "gray"
                             opacity: !!(player?.canGoPrevious) ? 1.0 : 0.5
-                            MouseArea { 
+                            MouseArea {
                                 anchors.fill: parent
                                 enabled: !!(player?.canGoPrevious)
-                                onClicked: player?.previous() 
+                                onClicked: player?.previous()
                             }
                         }
 
                         Text {
                             text: (player?.playbackState === MprisPlaybackState.Playing) ? "󰏤" : "󰐊"
-                            font.pixelSize: 30
+                            font.pixelSize: 22
                             color: HyprUITheme.primary ?? "#cba6f7"
                             MouseArea { anchors.fill: parent; onClicked: player?.togglePlaying() }
                         }
 
                         Text {
                             text: "󰒭"
-                            font.pixelSize: 20
+                            font.pixelSize: 15
                             color: !!(player?.canGoNext) ? (HyprUITheme.active.text ?? "white") : "gray"
                             opacity: !!(player?.canGoNext) ? 1.0 : 0.5
-                            MouseArea { 
+                            MouseArea {
                                 anchors.fill: parent
                                 enabled: !!(player?.canGoNext)
-                                onClicked: player?.next() 
+                                onClicked: player?.next()
                             }
                         }
                     }

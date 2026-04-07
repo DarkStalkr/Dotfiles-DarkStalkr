@@ -167,12 +167,21 @@ Singleton {
         curve: Easing.OutQuint
     })
 
+    // Debounce theme-change notifications. Rapid cycling used to spawn one
+    // popup per keypress, flooding the screen and (worse) blocking input on
+    // every overlay rect. Restart on each cycle so only the *final* theme
+    // produces a single notification ~600ms after the user stops.
+    Timer {
+        id: themeAnnounceTimer
+        interval: 600
+        repeat: false
+        onTriggered: Notifications.send("Theme Changed", "HyprUI is now using: " + active.name)
+    }
+
     function cycle() {
         let keys = Object.keys(themes);
         current = keys[(keys.indexOf(current) + 1) % keys.length];
         console.log("HyprUITheme: Cycling theme to: " + current);
-        
-        // Trigger accessibility notification
-        Notifications.send("Theme Changed", "HyprUI is now using: " + active.name);
+        themeAnnounceTimer.restart();
     }
 }

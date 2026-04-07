@@ -33,6 +33,7 @@ Item {
     property color _mYellow:   "#f9e2af"
     property color _mMaroon:   "#eba0ac"
     property color _mTeal:     "#94e2d5"
+    property color _mLavender: "#b4befe"
 
     // ─── Public API ───────────────────────────────────────────────────────────
     // Structural/accent: HyprUITheme when no matugen → reacts to HyprUITheme.cycle()
@@ -60,6 +61,7 @@ Item {
     readonly property color yellow:   _mYellow
     readonly property color maroon:   _mMaroon
     readonly property color teal:     _mTeal
+    readonly property color lavender: _mLavender
 
     // ─── Matugen JSON reader ─────────────────────────────────────────────────
     Process {
@@ -94,6 +96,7 @@ Item {
                     if (c.yellow)   root._mYellow   = c.yellow;
                     if (c.maroon)   root._mMaroon   = c.maroon;
                     if (c.teal)     root._mTeal     = c.teal;
+                    if (c.lavender) root._mLavender = c.lavender;
                     root._hasMatugen = true;
                 } catch(e) {}
             }

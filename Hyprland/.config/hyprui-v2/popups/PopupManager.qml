@@ -78,7 +78,7 @@ FloatingWindow {
 
         let base = {
             "battery":   { w: 480,  h: 820, comp: "battery/BatteryPopup.qml" },
-            "calendar":  { w: 760,  h: 874, comp: "calendar/CalendarPopup.qml" },
+            "calendar":  { w: 860,  h: 874, comp: "calendar/CalendarPopup.qml" },
             "music":     { w: 700,  h: 620, comp: "music/MusicPopup.qml" },
             "network":   { w: 900,  h: 700, comp: "network/NetworkPopup.qml" },
             "stewart":   { w: 800,  h: 600, comp: "stewart/stewart.qml" },
@@ -105,11 +105,11 @@ FloatingWindow {
         opacity: masterWindow.isVisible ? 1.0 : 0.0
         Behavior on opacity { NumberAnimation { duration: masterWindow.isWallpaperTransition ? 150 : (masterWindow.morphDuration === 500 ? 300 : 200); easing.type: Easing.InOutSine } }
 
-        // INNER FIXED SIZE WIDGET CONTENT
+        // INNER WIDGET CONTENT — tracks actual window size so manual WM resizes propagate
         Item {
             anchors.centerIn: parent
-            width: masterWindow.currentActive !== "hidden" && getLayout(masterWindow.currentActive) ? getLayout(masterWindow.currentActive).w : 1
-            height: masterWindow.currentActive !== "hidden" && getLayout(masterWindow.currentActive) ? getLayout(masterWindow.currentActive).h : 1
+            width: masterWindow.implicitWidth > 1 ? masterWindow.implicitWidth : (masterWindow.currentActive !== "hidden" && getLayout(masterWindow.currentActive) ? getLayout(masterWindow.currentActive).w : 1)
+            height: masterWindow.implicitHeight > 1 ? masterWindow.implicitHeight : (masterWindow.currentActive !== "hidden" && getLayout(masterWindow.currentActive) ? getLayout(masterWindow.currentActive).h : 1)
 
             StackView {
                 id: widgetStack
@@ -207,11 +207,10 @@ FloatingWindow {
             masterWindow.currentActive = newWidget;
             masterWindow.activeArg = newArg;
 
-            masterWindow.animW = t.w;
-            masterWindow.animH = t.h;
-
             masterWindow.implicitWidth = t.w;
             masterWindow.implicitHeight = t.h;
+            masterWindow.animW = t.w;
+            masterWindow.animH = t.h;
 
             let props = newWidget === "wallpaper" ? { "widgetArg": newArg } : {};
             widgetStack.replace(t.comp, props, StackView.Immediate);

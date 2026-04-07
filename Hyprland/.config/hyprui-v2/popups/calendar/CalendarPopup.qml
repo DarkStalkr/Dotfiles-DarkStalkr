@@ -65,6 +65,7 @@ Item {
 
     readonly property string scriptsDir: Quickshell.env("HOME") + "/.config/hyprui-v2/popups/calendar"
 
+
     // -------------------------------------------------------------------------
     // TIME OF DAY DYNAMIC COLORS
     // -------------------------------------------------------------------------
@@ -341,6 +342,35 @@ Item {
     property string targetMonthName: ""
     ListModel { id: calendarModel }
 
+    // ─── ICS / GNOME Calendar events ──────────────────────────────────────────
+    property var icalEvents: []
+
+    Process {
+        id: icalPoller
+        running: true
+        command: ["bash", window.scriptsDir + "/ical_reader.sh"]
+        stdout: StdioCollector {
+            onStreamFinished: {
+                let txt = this.text.trim();
+                if (txt !== "" && txt !== "[]") {
+                    try {
+                        window.icalEvents = JSON.parse(txt);
+                        updateCalendarGrid();   // rebuild grid with event dots
+                    } catch(e) {}
+                }
+            }
+        }
+    }
+    // Refresh events every 5 minutes
+    Timer { interval: 300000; running: true; repeat: true; onTriggered: icalPoller.running = true }
+
+    function eventsOnDate(year, month, day) {
+        let mm = String(month + 1).padStart(2, "0");
+        let dd = String(day).padStart(2, "0");
+        let key = year + "-" + mm + "-" + dd;
+        return window.icalEvents.filter(e => e.date === key);
+    }
+
     property real calendarContentOpacity: 1.0
     property real calendarContentOffset: 0.0
     property int calendarAnimDirection: 1
@@ -378,12 +408,12 @@ Item {
 
     function updateCalendarGrid() {
         let d = new Date(window.currentTime.getTime());
-        d.setDate(1); 
+        d.setDate(1);
         d.setMonth(d.getMonth() + window.monthOffset);
 
         let targetMonth = d.getMonth();
         let targetYear = d.getFullYear();
-        
+
         let actualToday = new Date();
         let isRealCurrentMonth = (actualToday.getMonth() === targetMonth && actualToday.getFullYear() === targetYear);
         let todayDate = actualToday.getDate();
@@ -391,22 +421,43 @@ Item {
         window.targetMonthName = Qt.formatDateTime(d, "MMMM yyyy");
 
         let firstDay = new Date(targetYear, targetMonth, 1).getDay();
-        firstDay = (firstDay === 0) ? 6 : firstDay - 1; 
+        firstDay = (firstDay === 0) ? 6 : firstDay - 1;
 
         let daysInMonth = new Date(targetYear, targetMonth + 1, 0).getDate();
         let daysInPrevMonth = new Date(targetYear, targetMonth, 0).getDate();
 
+        let prevMonth = targetMonth === 0 ? 11 : targetMonth - 1;
+        let prevYear  = targetMonth === 0 ? targetYear - 1 : targetYear;
+        let nextMonth = targetMonth === 11 ? 0 : targetMonth + 1;
+        let nextYear  = targetMonth === 11 ? targetYear + 1 : targetYear;
+
         calendarModel.clear();
 
         for (let i = firstDay - 1; i >= 0; i--) {
-            calendarModel.append({ dayNum: (daysInPrevMonth - i).toString(), isCurrentMonth: false, isToday: false });
+            let day = daysInPrevMonth - i;
+            let evts = eventsOnDate(prevYear, prevMonth, day);
+            calendarModel.append({
+                dayNum: day.toString(), isCurrentMonth: false, isToday: false,
+                hasEvents: evts.length > 0,
+                eventTitles: evts.map(e => "• " + e.summary).join("\n")
+            });
         }
         for (let i = 1; i <= daysInMonth; i++) {
-            calendarModel.append({ dayNum: i.toString(), isCurrentMonth: true, isToday: (isRealCurrentMonth && i === todayDate) });
+            let evts = eventsOnDate(targetYear, targetMonth, i);
+            calendarModel.append({
+                dayNum: i.toString(), isCurrentMonth: true, isToday: (isRealCurrentMonth && i === todayDate),
+                hasEvents: evts.length > 0,
+                eventTitles: evts.map(e => "• " + e.summary).join("\n")
+            });
         }
         let remaining = 42 - calendarModel.count;
         for (let i = 1; i <= remaining; i++) {
-            calendarModel.append({ dayNum: i.toString(), isCurrentMonth: false, isToday: false });
+            let evts = eventsOnDate(nextYear, nextMonth, i);
+            calendarModel.append({
+                dayNum: i.toString(), isCurrentMonth: false, isToday: false,
+                hasEvents: evts.length > 0,
+                eventTitles: evts.map(e => "• " + e.summary).join("\n")
+            });
         }
     }
 
@@ -496,7 +547,7 @@ Item {
                 anchors.centerIn: parent
                 anchors.verticalCenterOffset: -100
                 width: 1; height: 1
-                z: 5
+                z: 15  // above wings (z:10) so clock is always readable
 
                 opacity: introClock
                 scale: 0.85 + (0.15 * introClock)
@@ -517,8 +568,8 @@ Item {
                     z: -10
                     x: -320
                     y: -140
-                    width: 640
-                    height: 280
+                    width: 320 * 2
+                    height: 140 * 2
                     opacity: 0.25
                     onPaint: {
                         var ctx = getContext("2d");
@@ -541,8 +592,8 @@ Item {
                 ColumnLayout {
                     anchors.centerIn: parent
                     spacing: 0
-                    z: 0 
-                    scale: 0.95 + (0.05 * window.secondPulse) 
+                    z: 2   // always above orbit cards (max orbit z = sin(rad)*100 relative to their parent)
+                    scale: 0.95 + (0.05 * window.secondPulse)
                     
                     RowLayout {
                         Layout.alignment: Qt.AlignHCenter
@@ -562,7 +613,7 @@ Item {
                             font.pixelSize: 32
                             color: window.textAccent
                             Layout.alignment: Qt.AlignBottom
-                            Layout.bottomMargin: 15
+                            Layout.bottomMargin: 14
                             opacity: window.secondPulse > 1.02 ? 1.0 : 0.6 
                             style: Text.Outline; styleColor: Qt.alpha(window.crust, 0.4)
                             Behavior on color { ColorAnimation { duration: 1000 } }
@@ -583,10 +634,11 @@ Item {
                 // TRUE 3D ORBITAL HOURLY FORECAST (Tied to Spin Transition)
                 Item {
                     anchors.fill: parent
+                    z: 0   // beneath the clock ColumnLayout (z: 2)
                     opacity: window.weatherContentOpacity
-                    
+
                     // Added Scale property to give a z-depth shrink effect when spinning
-                    scale: window.transitionScale 
+                    scale: window.transitionScale
                     transform: Translate { x: window.weatherContentOffset * 1.5 }
 
                     Repeater {
@@ -671,13 +723,15 @@ Item {
                 anchors.left: parent.left
                 anchors.top: parent.top
                 anchors.margins: 40
-                width: 320
+                // cap at 320 but scale down proportionally so wings never eat center
+                width: Math.min(320, Math.max(180, (parent.width - 160) * 0.457))
                 height: 420
-                color: Qt.alpha(window.surface0, 0.2) 
+                clip: true
+                color: Qt.alpha(window.surface0, 0.2)
                 radius: 14
                 border.color: Qt.alpha(window.surface1, 0.4)
                 border.width: 1
-                z: 10 
+                z: 10
 
                 opacity: introCalendar
                 transform: Translate { x: -40 * (1.0 - introCalendar) }
@@ -776,24 +830,56 @@ Item {
                             Rectangle {
                                 Layout.fillWidth: true
                                 Layout.fillHeight: true
-                                
+
                                 color: isToday ? window.textAccent : (dayMa.containsMouse ? Qt.alpha(window.surface2, 0.4) : "transparent")
                                 radius: 10
-                                scale: dayMa.containsMouse ? 1.2 : 1.0
-                                border.color: isToday ? window.surface0 : (dayMa.containsMouse ? window.overlay0 : "transparent")
-                                border.width: isToday || dayMa.containsMouse ? 1 : 0
-                                
+                                scale: dayMa.containsMouse ? 1.15 : 1.0
+                                // Event border: mauve when this day has events
+                                border.color: hasEvents && isCurrentMonth
+                                    ? (isToday ? Qt.alpha(window.base, 0.5) : window.mauve)
+                                    : (isToday ? window.surface0 : (dayMa.containsMouse ? window.overlay0 : "transparent"))
+                                border.width: isToday || dayMa.containsMouse || (hasEvents && isCurrentMonth) ? 1 : 0
+
                                 Behavior on color { ColorAnimation { duration: 150 } }
                                 Behavior on scale { NumberAnimation { duration: 250; easing.type: Easing.OutBack } }
 
                                 Text {
+                                    id: dayNumText
                                     anchors.centerIn: parent
+                                    // Shift up slightly when there is an event dot below
+                                    anchors.verticalCenterOffset: (hasEvents && isCurrentMonth) ? -3 : 0
                                     text: dayNum
                                     font.family: "JetBrains Mono"
                                     font.weight: isToday ? Font.Black : Font.Bold
-                                    font.pixelSize: 14
+                                    font.pixelSize: 13
                                     color: isToday ? window.base : (isCurrentMonth ? window.text : window.surface0)
                                     Behavior on color { ColorAnimation { duration: 200 } }
+                                }
+
+                                // Event presence dot
+                                Rectangle {
+                                    visible: hasEvents && isCurrentMonth
+                                    anchors.bottom: parent.bottom
+                                    anchors.bottomMargin: 3
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    width: 4; height: 4; radius: 2
+                                    color: isToday ? Qt.alpha(window.base, 0.8) : window.mauve
+                                }
+
+                                // Event tooltip on hover
+                                ToolTip {
+                                    visible: dayMa.containsMouse && hasEvents && isCurrentMonth
+                                    delay: 350
+                                    // Guard against undefined during model rebuild
+                                    text: (typeof eventTitles !== "undefined" && eventTitles !== "") ? eventTitles : ""
+                                    font.family: "JetBrains Mono"
+                                    font.pixelSize: 12
+                                    background: Rectangle {
+                                        color: window.surface0
+                                        radius: 8
+                                        border.color: window.mauve
+                                        border.width: 1
+                                    }
                                 }
 
                                 MouseArea { id: dayMa; anchors.fill: parent; hoverEnabled: true }
@@ -810,20 +896,22 @@ Item {
                 anchors.right: parent.right
                 anchors.top: parent.top
                 anchors.margins: 40
-                width: 320
+                width: Math.min(320, Math.max(180, (parent.width - 160) * 0.457))
                 height: 420
-                z: 10 
+                clip: true
+                z: 10
 
                 opacity: introWeather
                 transform: Translate { x: 40 * (1.0 - introWeather) }
 
                 ColumnLayout {
                     anchors.fill: parent
-                    spacing: 20
+                    anchors.margins: 20
+                    spacing: 15
 
                     RowLayout {
                         Layout.alignment: Qt.AlignRight | Qt.AlignTop
-                        spacing: 20
+                        spacing: 6
                         opacity: window.weatherContentOpacity
                         transform: Translate { x: window.weatherContentOffset }
                         
@@ -875,16 +963,17 @@ Item {
                     }
 
                     ColumnLayout {
-                        Layout.alignment: Qt.AlignRight 
+                        Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignHCenter
                         spacing: -5
                         
                         // BIG TEMPERATURE TEXT - Anchored so it doesn't slide with the wrapper
                         Text {
-                            Layout.alignment: Qt.AlignHCenter 
+                            Layout.alignment: Qt.AlignHCenter
                             text: Math.round(window.displayedTemp) + "°"
                             font.family: "JetBrains Mono"
                             font.weight: Font.Black
-                            font.pixelSize: 84
+                            font.pixelSize: 84  // matches clock font for visual balance
                             color: window.tempGlowColor
                             style: Text.Outline; 
                             styleColor: window.isTempAnimating ? Qt.alpha(window.tempGlowColor, 0.5) : Qt.alpha(window.crust, 0.4)
@@ -911,9 +1000,7 @@ Item {
 
                     RowLayout {
                         Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignRight
-                        Layout.rightMargin: 10
-                        spacing: 20
+                        spacing: 6
                         opacity: window.weatherContentOpacity
                         transform: Translate { x: window.weatherContentOffset }
 
@@ -926,15 +1013,16 @@ Item {
                             ] : []
 
                             Item {
-                                width: 68
+                                Layout.fillWidth: true
                                 height: 100
+                                readonly property real sz: Math.min(60, width * 0.85)
                                 scale: gaugeMa.containsMouse ? 1.15 : 1.0
                                 Behavior on scale { NumberAnimation { duration: 250; easing.type: Easing.OutBack } }
                                 
                                 Rectangle {
                                     anchors.top: parent.top
                                     anchors.horizontalCenter: parent.horizontalCenter
-                                    width: 68; height: 68; radius: 34
+                                    width: sz; height: sz; radius: sz/2
                                     color: window.textAccent
                                     opacity: gaugeMa.containsMouse ? 0.3 : 0.0
                                     Behavior on opacity { NumberAnimation { duration: 200 } }
@@ -942,7 +1030,7 @@ Item {
 
                                 Item {
                                     id: circleItem
-                                    width: 68; height: 68
+                                    width: sz; height: sz
                                     anchors.top: parent.top
                                     anchors.horizontalCenter: parent.horizontalCenter
                                     

@@ -1,5 +1,3 @@
 module components
 Tooltip 1.0 Tooltip.qml
 MaterialIcon 1.0 MaterialIcon.qml
-StyledCard 1.0 StyledCard.qml
-StyledWidget 1.0 StyledWidget.qml

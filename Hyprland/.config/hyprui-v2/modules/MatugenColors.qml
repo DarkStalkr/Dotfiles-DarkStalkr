@@ -28,6 +28,7 @@ Item {
     property color yellow: "#f9e2af"
     property color maroon: "#eba0ac"
     property color teal: "#94e2d5"
+    property color lavender: "#b4befe"
 
     property string rawJson: ""
 
@@ -63,6 +64,7 @@ Item {
                         if (c.yellow) root.yellow = c.yellow;
                         if (c.maroon) root.maroon = c.maroon;
                         if (c.teal) root.teal = c.teal;
+                        if (c.lavender) root.lavender = c.lavender;
                     } catch(e) {}
                 }
             }

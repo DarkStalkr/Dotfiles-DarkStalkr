@@ -65,6 +65,7 @@ PanelWindow {
         readonly property color pink:     _matugen.pink
         readonly property color teal:     _matugen.teal
         readonly property color maroon:   _matugen.maroon
+        readonly property color lavender: _matugen.lavender
     }
 
     // --- State Variables ---
@@ -128,13 +129,15 @@ PanelWindow {
     }
 
     property string kbLayout: "us"
+    property bool   kbJustChanged: false
+    property string _prevBtDevice: ""
 
     // Media — reactive to Players (MPRIS) service, no polling
     // MprisPlaybackStatus: Stopped=0, Playing=1, Paused=2
     readonly property bool isMediaActive: {
         let p = Players.active;
         return p !== null && p !== undefined &&
-               p.playbackStatus !== 0 &&
+               p.playbackState !== MprisPlaybackState.Stopped &&
                (p.trackTitle ?? "") !== "";
     }
     readonly property string mediaTitle:   Players.active?.trackTitle ?? ""
@@ -148,7 +151,7 @@ PanelWindow {
 
     // Derived
     readonly property bool isWifiOn:    Network.wifiEnabled
-    readonly property bool isBtOn:      btStatus.toLowerCase() === "enabled" || btStatus.toLowerCase() === "on"
+    readonly property bool isBtOn:      btStatus.trim().toLowerCase() === "on" || btStatus.trim().toLowerCase() === "enabled"
     readonly property bool isSoundActive: !Audio.muted && Audio.volume > 0
     property color batDynamicColor: {
         if (isCharging)    return mocha.green
@@ -168,59 +171,78 @@ PanelWindow {
         return m + ":" + (s < 10 ? "0" + s : s);
     }
 
+    // Bluetooth connect/disconnect notifications
+    onBtDeviceChanged: {
+        if (!barWindow.startupCascadeFinished) {
+            barWindow._prevBtDevice = barWindow.btDevice
+            return
+        }
+        if (barWindow.btDevice !== "" && barWindow._prevBtDevice === "") {
+            Quickshell.execDetached(["notify-send", "-i", "bluetooth-active", "-u", "normal", "-t", "3000",
+                "Bluetooth Connected", "󰂱  " + barWindow.btDevice])
+        } else if (barWindow.btDevice === "" && barWindow._prevBtDevice !== "") {
+            Quickshell.execDetached(["notify-send", "-i", "bluetooth", "-u", "low", "-t", "2000",
+                "Bluetooth", "󰂲  Device disconnected"])
+        }
+        barWindow._prevBtDevice = barWindow.btDevice
+    }
+
+    // Keyboard layout flash reset
+    Timer { id: kbFlashTimer; interval: 1200; running: false; repeat: false; onTriggered: barWindow.kbJustChanged = false }
+
     // ==========================================
     // DATA FETCHING (PROCESSES & TIMERS)
     // ==========================================
 
-    // BT poller — 3 s interval (BT has no native Quickshell service yet)
+    // BT poller — uses sys_info.sh (avoids embedding nerd-font chars in QML template literals)
     Process {
         id: btPoller
-        command: ["bash", "-c", `
-            SYS_INFO="${Quickshell.env("HOME")}/.config/hyprui-v2/popups/sys_info.sh"
-            echo "$($SYS_INFO --bt-status)"
-            echo "$($SYS_INFO --bt-icon)"
-            echo "$($SYS_INFO --bt-connected)"
-        `]
+        running: false
+        command: ["bash", "-c",
+            `SYS="${Quickshell.env("HOME")}/.config/hyprui-v2/popups/sys_info.sh"; ` +
+            `printf '%s\n%s\n%s\n' "$("$SYS" --bt-status)" "$("$SYS" --bt-icon)" "$("$SYS" --bt-connected)"`
+        ]
         stdout: StdioCollector {
             onStreamFinished: {
-                let lines = this.text.trim().split("\n");
-                if (lines.length >= 3) {
-                    barWindow.btStatus = lines[0];
-                    barWindow.btIcon   = lines[1];
-                    barWindow.btDevice = lines[2];
+                let lines = this.text.trim().split("\n").map(l => l.trim()).filter(l => l !== "");
+                if (lines.length >= 1) {
+                    barWindow.btStatus = lines[0];   // "on" | "off"
+                    if (lines.length >= 2) barWindow.btIcon = lines[1];
+                    let dev = lines.length >= 3 ? lines[2] : "";
+                    barWindow.btDevice = (dev === "Disconnected" || dev === "Off") ? "" : dev;
                 }
             }
         }
     }
     Timer { interval: 3000; running: true; repeat: true; triggeredOnStart: true; onTriggered: btPoller.running = true }
 
-    // KB layout poller — 5 s interval (layout rarely changes)
+    // KB layout — polling approach (reliable; events not stable across all Quickshell builds)
     Process {
         id: kbPoller
-        command: ["bash", "-c", `${Quickshell.env("HOME")}/.config/hyprui-v2/popups/sys_info.sh --kb-layout`]
+        running: false
+        command: ["bash", "-c", "hyprctl devices -j | jq -r '.keyboards[].active_keymap' | sort -u | head -1"]
         stdout: StdioCollector {
             onStreamFinished: {
-                let l = this.text.trim();
-                if (l !== "" && l !== barWindow.kbLayout) {
-                    // Only send notification if it's not the first run (startup)
+                let full = this.text.trim();
+                if (full === "") return;
+                // Shorten to 2-char code, e.g. "English (US)" → "EN", "Spanish (Latin American)" → "SP"
+                let code = full.substring(0, 2).toUpperCase();
+                if (code !== barWindow.kbLayout) {
                     if (barWindow.startupCascadeFinished) {
-                        Quickshell.execDetached(["notify-send", "-p", "Keyboard in " + l]);
+                        Quickshell.execDetached(["notify-send", "-i", "input-keyboard", "-u", "low",
+                            "-t", "2000", "Keyboard Layout", "⌨  " + full]);
+                        barWindow.kbJustChanged = true;
+                        kbFlashTimer.restart();
                     }
-                    barWindow.kbLayout = l;
+                    barWindow.kbLayout = code;
                 }
             }
         }
     }
-    Timer { interval: 5000; running: true; repeat: true; triggeredOnStart: true; onTriggered: kbPoller.running = true }
-
-    Connections {
-        target: Hyprland
-        function onRawEvent(event: HyprlandEvent): void {
-            if (event.name === "activelayout") {
-                kbPoller.running = true
-            }
-        }
-    }
+    // Seed at startup
+    Timer { interval: 800; running: true; repeat: false; onTriggered: kbPoller.running = true }
+    // Background refresh every 5 s — catches changes from hotkeys or external tools
+    Timer { interval: 5000; running: true; repeat: true; onTriggered: kbPoller.running = true }
 
 
     // Native Qt Time Formatting
@@ -298,7 +320,7 @@ PanelWindow {
                     id: searchMouse
                     anchors.fill: parent
                     hoverEnabled: true
-                    onClicked: Quickshell.execDetached(["bash", "-c", `${Quickshell.env("HOME")}/.config/hyprui-v2/popups/rofi_show.sh drun`])
+                    onClicked: UI.toggleLauncher()
                 }
             }
 
@@ -503,7 +525,7 @@ PanelWindow {
 
                                 Rectangle {
                                     Layout.preferredWidth: 32; Layout.preferredHeight: 32; radius: 8; color: mocha.surface1
-                                    border.width: Players.active?.playbackStatus === 1 ? 1 : 0
+                                    border.width: Players.active?.playbackState === MprisPlaybackState.Playing ? 1 : 0
                                     border.color: mocha.mauve
                                     clip: true
                                     Image { 
@@ -563,7 +585,7 @@ PanelWindow {
                             Item { 
                                 Layout.preferredWidth: 28; Layout.preferredHeight: 28; 
                                 Text { 
-                                    anchors.centerIn: parent; text: Players.active?.playbackStatus === 1 ? "󰏤" : "󰐊"; font.family: "Iosevka Nerd Font"; font.pixelSize: 30; 
+                                    anchors.centerIn: parent; text: Players.active?.playbackState === MprisPlaybackState.Playing ? "󰏤" : "󰐊"; font.family: "Iosevka Nerd Font"; font.pixelSize: 30;
                                     color: playMouse.containsMouse ? mocha.green : mocha.text; 
                                     Behavior on color { ColorAnimation { duration: 150 } }
                                     scale: playMouse.containsMouse ? 1.15 : 1.0
@@ -680,7 +702,7 @@ PanelWindow {
             // Dedicated System Tray Pill
             Rectangle {
                 height: UI.panelThickness
-                radius: 14
+                radius: 20
                 border.color: Qt.rgba(mocha.text.r, mocha.text.g, mocha.text.b, 0.08)
                 border.width: 1
                 color: Qt.rgba(mocha.base.r, mocha.base.g, mocha.base.b, 0.75)
@@ -768,7 +790,7 @@ PanelWindow {
             // System Elements Pill
             Rectangle {
                 height: UI.panelThickness
-                radius: 14
+                radius: 20
                 border.color: Qt.rgba(mocha.text.r, mocha.text.g, mocha.text.b, 0.08)
                 border.width: 1
                 color: Qt.rgba(mocha.base.r, mocha.base.g, mocha.base.b, 0.75)
@@ -809,15 +831,28 @@ PanelWindow {
                         Behavior on opacity { NumberAnimation { duration: 400; easing.type: Easing.OutCubic } }
 
                         RowLayout { id: kbLayoutRow; anchors.centerIn: parent; spacing: 8
-                            Text { text: "󰌌"; font.family: "Iosevka Nerd Font"; font.pixelSize: UI.fontSize.md; color: kbPill.isHovered ? mocha.text : mocha.overlay2 }
-                            Text { text: barWindow.kbLayout; font.family: "JetBrains Mono"; font.pixelSize: 13; font.weight: Font.Black; color: mocha.text }
+                            Text {
+                                text: "󰌌"; font.family: "Iosevka Nerd Font"; font.pixelSize: UI.fontSize.md
+                                color: barWindow.kbJustChanged ? mocha.green : (kbPill.isHovered ? mocha.text : mocha.overlay2)
+                                Behavior on color { ColorAnimation { duration: 400; easing.type: Easing.OutCubic } }
+                            }
+                            Text {
+                                text: barWindow.kbLayout; font.family: "JetBrains Mono"; font.pixelSize: 13; font.weight: Font.Black
+                                color: barWindow.kbJustChanged ? mocha.green : mocha.text
+                                Behavior on color { ColorAnimation { duration: 400; easing.type: Easing.OutCubic } }
+                            }
                         }
                         MouseArea {
                             id: kbMouse; anchors.fill: parent; hoverEnabled: true
                             onClicked: {
                                 Quickshell.execDetached(["hyprctl", "switchxkblayout", "all", "next"])
-                                kbPoller.running = true
+                                // Poll after a short delay so the new layout is reflected
+                                kbPollDelay.restart()
                             }
+                        }
+                        Timer {
+                            id: kbPollDelay; interval: 200; repeat: false
+                            onTriggered: kbPoller.running = true
                         }
                     }
 
@@ -870,7 +905,7 @@ PanelWindow {
                         MouseArea { id: wifiMouse; hoverEnabled: true; anchors.fill: parent; onClicked: Quickshell.execDetached(["bash", "-c", `${Quickshell.env("HOME")}/.config/hyprui-v2/popups/qs_manager.sh toggle network wifi`]) }
                     }
 
-                    // Bluetooth 
+                    // Bluetooth
                     Rectangle {
                         id: btPill
                         property bool isHovered: btMouse.containsMouse
@@ -878,16 +913,15 @@ PanelWindow {
                         clip: true
                         color: isHovered ? Qt.rgba(mocha.surface1.r, mocha.surface1.g, mocha.surface1.b, 0.6) : Qt.rgba(mocha.surface0.r, mocha.surface0.g, mocha.surface0.b, 0.4)
                         
-                        // Vibrant, guaranteed gradient contrast
+                        // Lavender gradient (distinct from WiFi blue) — shown when BT is enabled
                         Rectangle {
-                            anchors.fill: parent
-                            radius: 10
+                            anchors.fill: parent; radius: 10
                             opacity: barWindow.isBtOn ? 1.0 : 0.0
-                            Behavior on opacity { NumberAnimation { duration: 300 } }
+                            Behavior on opacity { NumberAnimation { duration: 400; easing.type: Easing.OutCubic } }
                             gradient: Gradient {
                                 orientation: Gradient.Horizontal
-                                GradientStop { position: 0.0; color: mocha.mauve }
-                                GradientStop { position: 1.0; color: Qt.lighter(mocha.mauve, 1.3) }
+                                GradientStop { position: 0.0; color: mocha.lavender }
+                                GradientStop { position: 1.0; color: Qt.lighter(mocha.lavender, 1.2) }
                             }
                         }
 
@@ -907,23 +941,37 @@ PanelWindow {
                         transform: Translate { y: btPill.initAnimTrigger ? 0 : 15; Behavior on y { NumberAnimation { duration: 500; easing.type: Easing.OutBack } } }
                         Behavior on opacity { NumberAnimation { duration: 400; easing.type: Easing.OutCubic } }
 
-                        RowLayout { id: btLayoutRow; anchors.centerIn: parent; spacing: barWindow.btDevice !== "" ? 8 : 0
+                        RowLayout { id: btLayoutRow; anchors.centerIn: parent; spacing: 8
                             Text { text: barWindow.btIcon; font.family: "Iosevka Nerd Font"; font.pixelSize: UI.fontSize.md; color: barWindow.isBtOn ? mocha.base : mocha.subtext0 }
-                            Text { 
-                                visible: barWindow.btDevice !== ""; text: barWindow.btDevice; 
-                                font.family: "JetBrains Mono"; font.pixelSize: 13; font.weight: Font.Black; 
-                                color: barWindow.isBtOn ? mocha.base : mocha.text; 
-                                Layout.maximumWidth: 100; elide: Text.ElideRight 
+                            Text {
+                                text: barWindow.isBtOn ? (barWindow.btDevice !== "" ? barWindow.btDevice : "On") : "Off"
+                                font.family: "JetBrains Mono"; font.pixelSize: 13; font.weight: Font.Black
+                                color: barWindow.isBtOn ? mocha.base : mocha.text
+                                Layout.maximumWidth: 100; elide: Text.ElideRight
                             }
                         }
                         MouseArea {
                             id: btMouse; hoverEnabled: true; anchors.fill: parent
                             acceptedButtons: Qt.LeftButton | Qt.RightButton
                             onClicked: (mouse) => {
-                                if (mouse.button === Qt.LeftButton)
+                                if (mouse.button === Qt.RightButton)
                                     Quickshell.execDetached(["blueberry"])
                                 else
                                     Quickshell.execDetached(["/home/sohighman/.config/hypr/scripts/bluetooth-control.sh", "toggle"])
+                                // bluetooth-control.sh has a `sleep 2` after starting the unit,
+                                // so a single 400ms poll is too early. Re-poll repeatedly for ~5s.
+                                btPollDelay.runCount = 0
+                                btPollDelay.restart()
+                            }
+                        }
+                        Timer {
+                            id: btPollDelay
+                            property int runCount: 0
+                            interval: 700; repeat: true
+                            onTriggered: {
+                                btPoller.running = true
+                                runCount += 1
+                                if (runCount >= 7) { stop(); runCount = 0 }
                             }
                         }
                     }
@@ -1039,7 +1087,7 @@ PanelWindow {
                                     return icons[Math.min(Math.floor(battLayout.percentage / 20), 4)]
                                 }
                                 color: battLayout.battColor
-                                font.family: "MesloLGS NF"
+                                font.family: "Iosevka Nerd Font"
                                 font.pixelSize: UI.fontSize.md
                                 font.bold: true
                             }
@@ -1047,7 +1095,7 @@ PanelWindow {
                             Text {
                                 text: Math.round(battLayout.percentage) + "%"
                                 color: battLayout.battColor
-                                font.family: "MesloLGS NF"
+                                font.family: "Iosevka Nerd Font"
                                 font.pixelSize: UI.fontSize.md
                                 font.bold: true
                             }
@@ -1069,7 +1117,7 @@ PanelWindow {
 
                                 background: Rectangle {
                                     color: Qt.color(HyprUITheme.active.background)
-                                    radius: 8
+                                    radius: 14
                                     border.color: HyprUITheme.primary
                                     border.width: 1
                                     Rectangle {
@@ -1082,7 +1130,7 @@ PanelWindow {
                                     text: battTip.text
                                     color: Qt.color(HyprUITheme.active.text)
                                     font.family: "JetBrains Mono"
-                                    font.pixelSize: 12
+                                    font.pixelSize: 14
                                     font.weight: Font.Bold
                                     horizontalAlignment: Text.AlignHCenter
                                 }

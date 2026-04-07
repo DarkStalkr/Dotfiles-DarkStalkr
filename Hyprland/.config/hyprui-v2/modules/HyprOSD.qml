@@ -16,15 +16,21 @@ Scope {
 
     Connections {
         target: Audio
-        function onVolumeChanged() { 
+        function onVolumeChanged() {
             root.mode = "volume";
             root.active = true;
-            hideTimer.restart(); 
+            hideTimer.restart();
         }
-        function onMutedChanged() { 
+        function onMutedChanged() {
             root.mode = "volume";
             root.active = true;
-            hideTimer.restart(); 
+            hideTimer.restart();
+        }
+        // Show OSD when the default output device changes
+        function onDefaultSinkChanged() {
+            root.mode = "volume";
+            root.active = true;
+            hideTimer.restart();
         }
     }
 
@@ -66,6 +72,16 @@ Scope {
         }
         
         color: "transparent"
+
+        // Layer-shell window covers the whole screen so the OSD can be
+        // centred bottom — without an explicit input region the entire
+        // screen swallows clicks while the OSD is visible. Mask to the pill.
+        mask: Region {
+            x: container.x
+            y: container.y
+            width: container.width
+            height: container.height
+        }
 
         Rectangle {
             id: container

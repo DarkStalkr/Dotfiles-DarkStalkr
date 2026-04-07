@@ -129,6 +129,16 @@ Scope {
         implicitHeight: 600 // Increased height to prevent cropping
         color: "transparent"
 
+        // Limit input region to the card itself — without this the full
+        // 440x600 PanelWindow swallows clicks even on transparent areas,
+        // blocking the desktop and any apps behind the popup.
+        mask: Region {
+            x: container.x
+            y: container.y
+            width: container.width
+            height: container.height
+        }
+
         Item {
             id: container
             width: 400
@@ -168,12 +178,6 @@ Scope {
                 border.color: Qt.rgba(HyprUITheme.primary.r, HyprUITheme.primary.g, HyprUITheme.primary.b, 0.4)
                 border.width: 1
                 clip: true
-
-                // Full card click to discard
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: discard()
-                }
 
                 RowLayout {
                     id: contentLayout
