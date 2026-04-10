@@ -32,7 +32,7 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-dracula)
+(setq doom-theme 'catppuccin)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -43,11 +43,51 @@
 (setq org-directory "~/Documentos/org/")
 
 (after! org
-  (setq org-agenda-files (list org-directory)))
+  ;; Solo escanear zonas con TODOs: daily, areas, projects (no roam zettelkasten)
+  (setq org-agenda-files
+        (list (expand-file-name "diary/"  org-directory)
+              (expand-file-name "areas/"  org-directory)
+              (expand-file-name "projects/" org-directory))))
 
-;; Quick access to your new cheatsheet
+;; Configuration for 'eat' terminal emulator
+;; eat has better TUI/modern terminal support than vterm (sixel, OSC 52, etc.)
+(use-package! eat
+  :config
+  (setq eat-kill-buffer-on-exit t
+        ;; Soluciona el error 'eat-truecolor': unknown terminal type
+        eat-term-name "xterm-256color")
+  ;; Popup rule: bottom panel, 35% height
+  (set-popup-rule! "^\\*eat\\*" :side 'bottom :size 0.35 :select t :quit t :ttl nil)
+
+  ;; --- Evil + eat cursor fix ---
+  ;; Por defecto, eat entra en modo insert (input va al terminal)
+  (evil-set-initial-state 'eat-mode 'insert)
+
+  (add-hook 'eat-mode-hook
+            (lambda ()
+              ;; ESC en insert state → normal state de Emacs (navegación),
+              ;; NO pasa el ESC al terminal (evita el bug del cursor con mouse)
+              (evil-define-key 'insert eat-mode-map (kbd "<escape>") #'evil-normal-state)
+              ;; 'i' en normal state → volver a insertar/enviar input al terminal
+              (evil-define-key 'normal eat-mode-map (kbd "i") #'evil-insert-state)
+              (evil-define-key 'normal eat-mode-map (kbd "a") #'evil-insert-state)
+              ;; C-c C-k para matar el proceso del terminal
+              (evil-define-key '(insert normal) eat-mode-map (kbd "C-c C-k") #'eat-kill-process)
+              ;; C-c C-z para suspender (copy mode — navegar el output con evil)
+              (evil-define-key 'insert eat-mode-map (kbd "C-c C-z") #'eat-semi-char-mode))))
+
+(defun +eat/toggle ()
+  "Toggle eat terminal popup. Reusa el buffer existente si ya está corriendo."
+  (interactive)
+  (if-let ((buf (get-buffer "*eat*")))
+      (if-let ((win (get-buffer-window buf)))
+          (delete-window win)
+        (pop-to-buffer buf))
+    (eat)))
+
 (map! :leader
-      :desc "Open Cheat Sheet" "o c" (lambda () (interactive) (find-file (expand-file-name "cheatsheet.org" org-directory))))
+      :desc "Open Cheat Sheet" "o c" (lambda () (interactive) (find-file (expand-file-name "cheatsheet.org" org-directory)))
+      :desc "Toggle Eat Terminal" "o t" #'+eat/toggle)
 
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
@@ -85,32 +125,38 @@
 
 ;;(setq doom-font (font-spec :family "MesloLGMNerdFont" :size 18)
 ;;      doom-variable-pitch-font (font-spec :family "Ubuntu" :size 18)
-;;      doom-big-font (font-spec :familiy "MesloLGMNerdFont" :size 32))
+;;      doom-big-font (font-spec :family "MesloLGMNerdFont" :size 32))
 
 
 (setq doom-font (font-spec :family "Iosevka Nerd Font Mono" :size 20)
       doom-variable-pitch-font (font-spec :family "Iosevka Nerd Font Propo" :size 20)
-      doom-big-font (font-spec :familiy "MesloLGMNerdFont" :size 32))
+      doom-big-font (font-spec :family "MesloLGMNerdFont" :size 32))
 
 
 
 ;; Adding Programming Languages Org Mode Support
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((emacs-lisp . t)
-   (python . t)
-   (C . t)
-   (shell . t)
-   (go . t)
-   (mermaid . t))) ;; Add this line here
+(after! org
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (python . t)
+     (C . t)
+     (shell . t)
+     (go . t)
+     (mermaid . t))))
 
-
-;;Configure default shell for runnign code blocks
+;;Configure default shell for running code blocks
 (setq org-babel-sh-command "/bin/bash")
 
 ;; Org-roam configuration
 (after! org-roam
-  (setq org-roam-directory "~/RoamNotes")
+  (setq org-roam-directory (expand-file-name "roam/" org-directory))
+  ;; Dailies viven fuera de roam/ para no contaminar el zettelkasten
+  (setq org-roam-dailies-directory (expand-file-name "diary/" org-directory))
+  ;; Excluir de la DB directorios no-zettelkasten dentro de roam/
+  ;; (assets, sources de imágenes, etc.)
+  (setq org-roam-file-exclude-regexp
+        (rx (or "sources/" "assets/" ".venv/" "__pycache__/")))
 
   ;; This adds the "Obsidian Graph" sync features
   (use-package! org-roam-ui
@@ -119,7 +165,7 @@
     (setq org-roam-ui-sync-theme t
           org-roam-ui-follow t
           org-roam-ui-update-on-save t
-          org-roam-ui-open-on-start t))
+          org-roam-ui-open-on-start nil))
 
   ;; Your existing bindings
   (map! :leader
@@ -146,21 +192,104 @@
         org-appear-autosubmarkers t))
 
 ;; Make the rendered LaTeX larger and clearer on your Meslo font
-(setq org-format-latex-options (plist-put org-format-latex-options :scale 1.5))
+(after! org
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.5)))
 
 (after! org-pomodoro
-  (setq org-pomodoro-length 15
-        org-pomodoro-short-break-length 5))
+  (setq org-pomodoro-length 25
+        org-pomodoro-short-break-length 5
+        org-pomodoro-long-break-length 15
+        ;; Suppress org-pomodoro's own modeline strings — we display via our custom segment
+        org-pomodoro-format ""
+        org-pomodoro-short-break-format ""
+        org-pomodoro-long-break-format ""
+        org-pomodoro-overtime-format ""
+        ;; Disable built-in sounds — we play our own via my/pomodoro-notify
+        org-pomodoro-play-sounds nil)
+  ;; Suppress org-clock's modeline entry (task name + elapsed [0:00])
+  (setq org-clock-clocked-in-display nil)
+
+  ;; --- SQLite Database for Study Sessions ---
+  (defvar my/pomodoro-db-path (expand-file-name "pomodoro/study_sessions.sqlite" doom-user-dir)
+    "Path to the SQLite database storing pomodoro sessions.")
+  (defvar my/pomodoro-session-start nil
+    "Float-time when the current pomodoro started, recorded by our hook.")
+
+  (defun my/pomodoro-init-db ()
+    "Initialize the SQLite database and create the sessions table."
+    (make-directory (file-name-directory my/pomodoro-db-path) t)
+    (let ((db (sqlite-open my/pomodoro-db-path)))
+      (unwind-protect
+          (sqlite-execute db "CREATE TABLE IF NOT EXISTS sessions (
+                           id INTEGER PRIMARY KEY AUTOINCREMENT,
+                           date TEXT NOT NULL,
+                           time TEXT NOT NULL,
+                           document TEXT,
+                           duration_minutes INTEGER,
+                           state TEXT
+                         )")
+        (sqlite-close db))))
+
+  (my/pomodoro-init-db)
+
+  (defun my/pomodoro-log-to-sqlite (state &optional override-duration)
+    "Log a pomodoro session to the SQLite database.
+If OVERRIDE-DURATION is non-nil, use it instead of the preset length."
+    (my/pomodoro-init-db)
+    (let ((db (sqlite-open my/pomodoro-db-path))
+          (date (format-time-string "%Y-%m-%d"))
+          (time (format-time-string "%H:%M:%S"))
+          (doc (or (buffer-file-name) (buffer-name)))
+          (duration (or override-duration
+                        (cond ((eq state :pomodoro) org-pomodoro-length)
+                              ((eq state :short-break) org-pomodoro-short-break-length)
+                              ((eq state :long-break) org-pomodoro-long-break-length)
+                              (t 0)))))
+      (unwind-protect
+          (sqlite-execute db "INSERT INTO sessions (date, time, document, duration_minutes, state)
+                              VALUES (?, ?, ?, ?, ?)"
+                          (list date time doc duration (symbol-name state)))
+        (sqlite-close db))))
+
+  ;; --- Audio & Notifications ---
+  (defun my/pomodoro-notify (msg)
+    "Send a system notification and play an alert sound."
+    (start-process "pomodoro-alert" nil "mpv" "--no-video"
+                   (expand-file-name "media/notification/Dodo.flac" doom-user-dir))
+    (alert msg :title "Pomodoro"))
+
+  ;; --- Hooks ---
+  (add-hook 'org-pomodoro-finished-hook
+            (lambda ()
+              (my/pomodoro-log-to-sqlite :pomodoro)
+              (my/pomodoro-notify "Pomodoro finished! Time for a break.")))
+
+  (add-hook 'org-pomodoro-break-finished-hook
+            (lambda ()
+              (my/pomodoro-log-to-sqlite :short-break)
+              (my/pomodoro-notify "Break finished! Ready to focus again?")))
+
+  (add-hook 'org-pomodoro-started-hook
+            (lambda ()
+              (setq my/pomodoro-session-start (float-time))
+              (my/pomodoro-notify "Pomodoro session started!")))
+
+  (add-hook 'org-pomodoro-killed-hook
+            (lambda ()
+              (when my/pomodoro-session-start
+                (let ((elapsed (floor (/ (- (float-time) my/pomodoro-session-start) 60))))
+                  (setq my/pomodoro-session-start nil)
+                  (when (> elapsed 0)
+                    (my/pomodoro-log-to-sqlite :killed elapsed)
+                    (my/pomodoro-notify (format "Pomodoro stopped. %d min logged." elapsed))))))))
 
 ;;; Atmosphere/Audio for Deep Focus
 (defvar my/atmosphere-dir "/home/sohighman/.config/doom/media/audio/"
   "Directory where atmosphere sounds are stored.")
-
 (defvar my/atmosphere-process nil
-  "Holds the process of the currently playing sound.")
-
+  "Process handle for the currently playing atmosphere sound.")
 (defvar my/atmosphere-current-track nil
-  "Currently playing track filename.")
+  "Filename of the currently selected atmosphere track.")
 
 (defun my/atmosphere-get-tracks ()
   "Get list of audio files in the atmosphere directory."
@@ -339,10 +468,49 @@
                                (define-key map [mode-line mouse-1] #'my/toggle-spell-lang)
                                map))))
 
+  (defun my/pomodoro-view-sessions ()
+    "Display the last 20 pomodoro sessions from SQLite."
+    (interactive)
+    (let ((db (sqlite-open my/pomodoro-db-path))
+          (buf (get-buffer-create "*Pomodoro-Sessions*")))
+      (unwind-protect
+          (with-current-buffer buf
+            (let ((inhibit-read-only t))
+              (erase-buffer)
+              (insert "| ID | Date | Time | Duration | State | Document |\n")
+              (insert "|----+------+------+----------+-------+----------|\n")
+              (cl-loop for row in (sqlite-select db "SELECT id, date, time, duration_minutes, state, document FROM sessions ORDER BY id DESC LIMIT 20")
+                       do (insert (format "| %s | %s | %s | %d min | %s | %s |\n"
+                                          (nth 0 row) (nth 1 row) (nth 2 row) (nth 3 row) (nth 4 row) (nth 5 row))))
+              (org-mode)
+              (read-only-mode 1)
+              (goto-char (point-min))
+              (evil-local-set-key 'normal (kbd "q") #'kill-buffer-and-window)
+              (evil-local-set-key 'normal (kbd "<escape>") #'kill-buffer-and-window))
+            (display-buffer buf))
+        (sqlite-close db))))
+
+  (doom-modeline-def-segment my-pomodoro
+    "Display a clickable Pomodoro timer in the modeline."
+    (let* ((active (and (fboundp 'org-pomodoro-active-p) (org-pomodoro-active-p)))
+           (icon (if active
+                     (propertize " 󱎫 " 'face 'warning)
+                   (propertize " 󱎫 " 'face 'shadow)))
+           (text (if active (org-pomodoro-format-seconds) "Pomodoro")))
+      (propertize (concat icon text " ")
+                  'help-echo "Left-click: Toggle Pomodoro\nRight-click: View Sessions"
+                  'mouse-face 'highlight
+                  'local-map (let ((map (make-sparse-keymap)))
+                               (define-key map [mode-line mouse-1]
+                                 (lambda () (interactive)
+                                   (org-pomodoro)))
+                               (define-key map [mode-line mouse-3] #'my/pomodoro-view-sessions)
+                               map))))
+
   ;; Redefine the 'main' modeline to include our new indicators
   (doom-modeline-def-modeline 'main
     '(bar window-number modals matches buffer-info remote-host buffer-position word-count parrot selection-info)
-    '(my-spell-lang my-roam-ui-toggle my-recorder objed-state misc-info battery grip debug repl lsp minor-modes input-method indent-info buffer-encoding major-mode process vcs check)))
+    '(my-pomodoro my-spell-lang my-roam-ui-toggle my-recorder objed-state misc-info battery grip debug repl lsp minor-modes input-method indent-info buffer-encoding major-mode process vcs check)))
 
 ;; --- Spellcheck Language Toggle ---
 (setq ispell-dictionary "es") ;; Default to Spanish
@@ -404,10 +572,66 @@
         org-modern-keyword t)
   (global-org-modern-mode))
 
-;; Fix: cursor de evil (bloque) desborda visualmente sobre los badges de TODO
-;; Solución: cursor de barra en org-mode para evitar el overlap
 (add-hook 'org-mode-hook
           (lambda ()
-            (hl-line-mode -1)
-            (setq-local evil-normal-state-cursor '(bar . 2))
-            (setq-local evil-insert-state-cursor '(bar . 2))))
+            (hl-line-mode -1)))
+
+;;; --- Excalidraw Integration ---
+(use-package! org-excalidraw
+  :after org
+  :config
+  (setq org-excalidraw-directory (expand-file-name "excalidraw/" org-directory))
+  ;; excalidraw_export: npm install -g excalidraw_export
+  (setq org-excalidraw-export-program (executable-find "excalidraw_export"))
+  (org-excalidraw-initialize))
+
+;; xdg-open en Hyprland detecta .excalidraw como application/json → abre Firefox.
+;; gio detecta correctamente application/vnd.excalidraw+json → abre la PWA.
+(after! org-excalidraw
+  (defun org-excalidraw--shell-cmd-open (path _os-type)
+    "Open excalidraw file with gio instead of xdg-open."
+    (concat "gio open " (shell-quote-argument path))))
+
+;; Crear directorio si no existe
+(make-directory (expand-file-name "excalidraw/" org-directory) t)
+
+;; Keybindings
+(map! :leader
+      (:prefix ("n x" . "excalidraw")
+       :desc "New drawing"  "n" #'org-excalidraw-create-drawing
+       :desc "Open drawing" "o" (cmd! (find-file
+                                        (read-file-name "Open excalidraw: "
+                                                        (expand-file-name "excalidraw/" org-directory)
+                                                        nil t nil
+                                                        (lambda (f) (string-suffix-p ".excalidraw" f)))))))
+
+;;; --- NvChad-style IDE enhancements ---
+
+;; Treemacs: sidebar más potente que neotree (equivalente a nvim-tree)
+(after! treemacs
+  (setq treemacs-width 28
+        treemacs-show-hidden-files t
+        treemacs-indentation 1
+        treemacs-git-mode 'deferred       ; git status async (no bloquea)
+        treemacs-follow-mode t            ; sigue el archivo activo
+        treemacs-filewatch-mode t))       ; detecta cambios en disco
+
+;; Indent guides: como indent-blankline.nvim de NvChad
+(after! highlight-indent-guides
+  (setq highlight-indent-guides-method 'character
+        highlight-indent-guides-character ?\│
+        highlight-indent-guides-responsive 'top)) ; resalta la guía del nivel actual
+
+;; Centaur-tabs: bufferline como NvChad
+(after! centaur-tabs
+  (setq centaur-tabs-style "bar"
+        centaur-tabs-set-bar 'over         ; barra de color en la pestaña activa
+        centaur-tabs-set-icons t           ; iconos de archivo
+        centaur-tabs-height 32
+        centaur-tabs-set-modified-marker t ; marca los buffers sin guardar
+        centaur-tabs-modified-marker "●")
+  ;; Agrupar pestañas por proyecto (como bufferline de NvChad)
+  (centaur-tabs-group-by-projectile-project)
+  ;; Keybindings: navegar entre tabs como en NvChad (gt / gT en vim)
+  (map! :n "gt" #'centaur-tabs-forward
+        :n "gT" #'centaur-tabs-backward))

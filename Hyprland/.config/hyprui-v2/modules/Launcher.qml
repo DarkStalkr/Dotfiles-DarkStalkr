@@ -10,6 +10,7 @@ import "../components"
 Scope {
     id: root
     required property ShellScreen screen
+    property int fontSizeBase: 14
 
     // Only show on the focused monitor to avoid multi-focus issues
     readonly property bool isFocusedMonitor: Hyprland.focusedMonitor?.name === screen?.name
@@ -89,14 +90,14 @@ Scope {
             radius: 1
             color: HyprUITheme.active.background
             // 0.16em ≈ 2.5px lavender border in wofi
-            border.color: HyprUITheme.primary
-            border.width: 1
+            //border.color: HyprUITheme.active.secondary
+            //border.width: Math.max(1, Math.round(0.16 * root.fontSizeBase))
 
             opacity: visibleState ? 1.0 : 0.0
             scale: visibleState ? 1.0 : 0.95
 
-            Behavior on opacity { NumberAnimation { duration: 200 } }
-            Behavior on scale { NumberAnimation { duration: 200; easing.type: Easing.OutBack } }
+            Behavior on opacity { NumberAnimation { duration: 500 } }
+            Behavior on scale { NumberAnimation { duration: 500; easing.type: Easing.OutBack } }
 
             ColumnLayout {
                 // wofi outer-box: 5px margin + 10px padding ≈ 15px combined
@@ -131,8 +132,8 @@ Scope {
                         anchors.verticalCenter: parent.verticalCenter
                         text: "󰍉"
                         font.family: "Iosevka Nerd Font"
-                        font.pixelSize: 16
-                        color: HyprUITheme.primary
+                        font.pixelSize: 18
+                        color: HyprUITheme.secondary
                         renderType: Text.NativeRendering
                     }
 

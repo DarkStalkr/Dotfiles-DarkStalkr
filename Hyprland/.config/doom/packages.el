@@ -56,3 +56,6 @@
 (package! catppuccin-theme)
 (package! org-appear)  ; Makes org-mode hide markup until the cursor is on it
 (package! org-modern)
+(package! eat)
+(package! org-excalidraw
+  :recipe (:host github :repo "wdavew/org-excalidraw"))
